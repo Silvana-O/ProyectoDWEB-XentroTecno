@@ -92,6 +92,48 @@
 
 
                 <!-- Las tarjetas se generarán mediante JavaScript -->
+                 <div class="row g-3 mb-4">
+
+                    <div class="col-12 col-md-7">
+                        <label for="buscador" class="form-label">
+                            Buscar producto
+                        </label>
+
+                        <input
+                            type="text"
+                            id="buscador"
+                            class="form-control"
+                            placeholder="Buscar por nombre..."
+                        >
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <label for="filtroCategoria" class="form-label">
+                            Filtrar por categoría
+                        </label>
+
+                        <select id="filtroCategoria" class="form-select">
+                            <option value="">Todas las categorías</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="mb-4">
+                    <button
+                        type="button"
+                        id="btnLimpiarFiltros"
+                        class="btn btn-outline-primary"
+                    >
+                        Limpiar filtros
+                    </button>
+                </div>
+
+                <div id="mensajeSinResultados" class="alert alert-info d-none">
+                    No se encontraron productos que coincidan con la búsqueda.
+                </div>
+
+
 
                 <div id="contenedorProductos" class="row g-4">
                 </div>
