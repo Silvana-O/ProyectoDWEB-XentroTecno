@@ -2,16 +2,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const contenedor = document.querySelector("#productoDetalle");
 
-    // Obtener el id del producto desde la URL
     const parametros = new URLSearchParams(window.location.search);
     const idProducto = parametros.get("id");
 
-    // Buscar el producto correspondiente
     const producto = productos.find(
         producto => producto.id === idProducto
     );
 
-    // Verificar si el producto existe
     if (!producto) {
 
         contenedor.innerHTML = `
@@ -35,11 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Mostrar el detalle del producto
     contenedor.innerHTML = `
         <div class="row g-4 align-items-center">
 
-            <!-- IMAGEN -->
             <div class="col-12 col-md-6">
 
                 <div class="text-center">
@@ -54,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             </div>
 
-            <!-- INFORMACIÓN -->
             <div class="col-12 col-md-6">
 
                 <span class="badge text-bg-secondary mb-3">
@@ -78,7 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     ${producto.stock}
                 </p>
 
-                <!-- CANTIDAD -->
                 <div class="mb-3">
 
                     <label
@@ -104,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 </div>
 
-                <!-- BOTÓN -->
                 <button
                     type="button"
                     id="btnAgregarCarrito"
@@ -117,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         </div>
 
-        <!-- VOLVER AL CATÁLOGO -->
         <div class="text-center mt-4">
 
             <a
@@ -130,14 +121,16 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
     `;
 
-    // Obtener el campo de cantidad y el mensaje
     const cantidadInput = document.querySelector("#cantidadProducto");
     const mensajeCantidad = document.querySelector("#mensajeCantidad");
+    const btnAgregarCarrito = document.querySelector("#btnAgregarCarrito");
 
-    // Validar la cantidad ingresada
     cantidadInput.addEventListener("input", () => {
 
         const cantidad = Number(cantidadInput.value);
+
+        mensajeCantidad.classList.remove("text-success");
+        mensajeCantidad.classList.add("text-danger");
 
         if (cantidad < 1) {
 
@@ -154,6 +147,76 @@ document.addEventListener("DOMContentLoaded", () => {
             mensajeCantidad.textContent = "";
 
         }
+
+    });
+
+    btnAgregarCarrito.addEventListener("click", () => {
+
+        const cantidad = Number(cantidadInput.value);
+
+        if (
+            cantidad < 1 ||
+            cantidad > producto.stock ||
+            !Number.isInteger(cantidad)
+        ) {
+
+            mensajeCantidad.classList.remove("text-success");
+            mensajeCantidad.classList.add("text-danger");
+
+            mensajeCantidad.textContent =
+                `Ingresá una cantidad válida entre 1 y ${producto.stock}.`;
+
+            return;
+        }
+
+        let carrito = JSON.parse(
+            localStorage.getItem("carrito")
+        ) || [];
+
+        const productoExistente = carrito.find(
+            item => item.id === producto.id
+        );
+
+        if (productoExistente) {
+
+            const nuevaCantidad =
+                productoExistente.cantidad + cantidad;
+
+            if (nuevaCantidad > producto.stock) {
+
+                mensajeCantidad.classList.remove("text-success");
+                mensajeCantidad.classList.add("text-danger");
+
+                mensajeCantidad.textContent =
+                    `No podés agregar esa cantidad. El stock disponible es ${producto.stock}.`;
+
+                return;
+            }
+
+            productoExistente.cantidad = nuevaCantidad;
+
+        } else {
+
+            carrito.push({
+                id: producto.id,
+                nombre: producto.nombre,
+                precio: producto.precio,
+                imagen: producto.imagen,
+                cantidad: cantidad
+            });
+
+        }
+
+        localStorage.setItem(
+            "carrito",
+            JSON.stringify(carrito)
+        );
+
+        mensajeCantidad.classList.remove("text-danger");
+        mensajeCantidad.classList.add("text-success");
+
+        mensajeCantidad.textContent =
+            "Producto agregado al carrito.";
 
     });
 
