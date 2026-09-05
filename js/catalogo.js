@@ -79,6 +79,13 @@ document.addEventListener("DOMContentLoaded", () => {
                             Stock disponible: ${producto.stock}
                         </p>
 
+                        <a
+                            href="producto.html?id=${producto.id}"
+                            class="btn btn-primary mt-3"
+                        >
+                            Ver detalle
+                        </a>
+
                     </div>
 
                 </div>
