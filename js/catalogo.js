@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </p>
 
                         <p class="fw-bold fs-5 mt-auto">
-                            $${producto.precio}
+                            UDS ${producto.precio}
                         </p>
 
                         <p class="mb-0">
