@@ -79,12 +79,24 @@ document.addEventListener("DOMContentLoaded", () => {
                             Stock disponible: ${producto.stock}
                         </p>
 
-                        <a
-                            href="producto.html?id=${producto.id}"
-                            class="btn btn-primary mt-3"
-                        >
-                            Ver detalle
-                        </a>
+                        <div class="d-grid gap-2 mt-3">
+
+                            <a
+                                href="producto.html?id=${producto.id}"
+                                class="btn btn-primary"
+                            >
+                                Ver detalle
+                            </a>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary btn-agregar-carrito"
+                                data-id="${producto.id}"
+                            >
+                                Agregar al carrito
+                            </button>
+
+                        </div>
 
                     </div>
 
@@ -94,6 +106,95 @@ document.addEventListener("DOMContentLoaded", () => {
             contenedor.appendChild(tarjeta);
 
         });
+
+
+        configurarBotonesAgregar();
+
+    }
+
+
+    // Agregar producto al carrito
+    function configurarBotonesAgregar() {
+
+        const botones =
+            document.querySelectorAll(".btn-agregar-carrito");
+
+
+        botones.forEach(boton => {
+
+            boton.addEventListener("click", () => {
+
+                const id = boton.dataset.id;
+
+                const producto = productos.find(
+                    producto => producto.id === id
+                );
+
+
+                if (!producto) {
+                    return;
+                }
+
+
+                let carrito = JSON.parse(
+                    localStorage.getItem("carrito")
+                ) || [];
+
+
+                const productoExistente = carrito.find(
+                    item => item.id === producto.id
+                );
+
+
+                if (productoExistente) {
+
+                    const nuevaCantidad =
+                        productoExistente.cantidad + 1;
+
+
+                    if (nuevaCantidad > producto.stock) {
+
+                        alert(
+                            `No podés agregar más unidades. El stock disponible es ${producto.stock}.`
+                        );
+
+                        return;
+                    }
+
+
+                    productoExistente.cantidad = nuevaCantidad;
+
+                } else {
+
+                    carrito.push({
+                        id: producto.id,
+                        nombre: producto.nombre,
+                        precio: producto.precio,
+                        imagen: producto.imagen,
+                        cantidad: 1
+                    });
+
+                }
+
+
+                localStorage.setItem(
+                    "carrito",
+                    JSON.stringify(carrito)
+                );
+
+
+                boton.textContent = "Agregado al carrito";
+
+                setTimeout(() => {
+
+                    boton.textContent = "Agregar al carrito";
+
+                }, 1500);
+
+            });
+
+        });
+
     }
 
 
@@ -119,6 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         mostrarProductos(productosFiltrados);
+
     }
 
 
