@@ -34,6 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
         mensajeCarritoVacio.classList.add("d-none");
         resumenCarrito.classList.remove("d-none");
 
+        const total = carrito.reduce(
+            (acumulado, item) => acumulado + item.precio * item.cantidad,
+            0
+        );
+
+        document.querySelector("#totalCarrito").textContent =
+            `USD ${total}`;
+
 
         carrito.forEach(item => {
 

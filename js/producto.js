@@ -218,6 +218,27 @@ document.addEventListener("DOMContentLoaded", () => {
         mensajeCantidad.textContent =
             "Producto agregado al carrito.";
 
+        let btnVerCarrito = document.querySelector("#btnVerCarrito");
+
+        if (!btnVerCarrito) {
+            btnVerCarrito = document.createElement("a");
+
+            btnVerCarrito.id = "btnVerCarrito";
+            btnVerCarrito.href = "carrito.html";
+            btnVerCarrito.textContent = "Ver carrito";
+
+            btnVerCarrito.classList.add(
+                "btn",
+                "btn-outline-primary",
+                "mt-2"
+            );
+
+            mensajeCantidad.insertAdjacentElement(
+                "afterend",
+                btnVerCarrito
+            );
+        }
+
     });
 
 });
