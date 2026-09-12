@@ -50,7 +50,6 @@ Este proyecto fue desarrollado como parte del Taller Integrador de Sistemas – 
 │   └── styles.css
 │
 ├── js/
-│   ├── base.js
 │   ├── productos.js
 │   ├── catalogo.js
 │   ├── producto.js
