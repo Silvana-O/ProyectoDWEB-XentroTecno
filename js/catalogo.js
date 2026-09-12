@@ -199,28 +199,85 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // Aplicar búsqueda y filtro
+
+    function normalizarTexto(texto) {
+
+        return texto
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+
+    }
+
     function aplicarFiltros() {
 
-        const textoBuscado = buscador.value.toLowerCase().trim();
+        const textoBuscado = normalizarTexto(buscador.value.trim());
         const categoriaSeleccionada = filtroCategoria.value;
-
 
         const productosFiltrados = productos.filter(producto => {
 
-            const coincideNombre =
-                producto.nombre.toLowerCase().includes(textoBuscado);
+            const nombre = normalizarTexto(producto.nombre);
+            const descripcion = normalizarTexto(producto.descripcion);
+            const categoria = normalizarTexto(producto.categoria);
+            const marca = normalizarTexto(producto.marca);
+            const modelo = normalizarTexto(producto.modelo);
+
+            let textoParaBuscar = `
+                ${nombre}
+                ${descripcion}
+                ${categoria}
+                ${marca}
+                ${modelo}
+            `;
+
+            // Sinónimos para monitores
+            if (
+                categoria.includes("monitor") ||
+                nombre.includes("ultrawide")
+            ) {
+                textoParaBuscar += `
+                    monitor
+                    pantalla
+                    display
+                `;
+            }
+
+            // Sinónimos para mouse
+            if (
+                categoria.includes("periferico") ||
+                nombre.includes("mouse")
+            ) {
+                textoParaBuscar += `
+                    mouse
+                    raton
+                `;
+            }
+
+            // Sinónimos para notebooks
+            if (
+                categoria.includes("notebook") ||
+                nombre.includes("notebook")
+            ) {
+                textoParaBuscar += `
+                    notebook
+                    laptop
+                    computadora
+                    ordenador
+                `;
+            }
+
+            const coincideTexto =
+                textoParaBuscar.includes(textoBuscado);
 
             const coincideCategoria =
                 categoriaSeleccionada === "" ||
                 producto.categoria === categoriaSeleccionada;
 
-            return coincideNombre && coincideCategoria;
+            return coincideTexto && coincideCategoria;
 
         });
 
-
         mostrarProductos(productosFiltrados);
-
     }
 
 

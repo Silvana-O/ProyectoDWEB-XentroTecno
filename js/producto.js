@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 href="catalogo.html"
                 class="btn btn-outline-primary"
             >
-                Volver al catálogo
+                Ir al catálogo
             </a>
 
         </div>
