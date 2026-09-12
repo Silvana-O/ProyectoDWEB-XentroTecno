@@ -27,13 +27,8 @@
                     Xentro Tecno
                 </a>
 
-                <button class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#mainNav"
-                    aria-controls="mainNav"
-                    aria-expanded="false"
-                    aria-label="Abrir menú de navegación">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Abrir menú de navegación">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -48,9 +43,6 @@
                             <a class="nav-link" data-page="catalogo" href="catalogo.html">Catálogo</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" data-page="producto" href="producto.html">Producto</a>
-                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link" data-page="carrito" href="carrito.html">Carrito</a>
@@ -68,12 +60,10 @@
                     <a class="btn btn-outline-light btn-sm me-2" href="carrito.html">
                         <span aria-hidden="true">🛒</span>
                         Carrito
-                        <span class="badge text-bg-light">0</span>
+                        <span class="badge text-bg-light" id="contadorCarrito">0</span>
                     </a>
 
-                    <button class="btn btn-outline-light btn-sm"
-                        id="btnLoginPlaceholder"
-                        type="button">
+                    <button class="btn btn-outline-light btn-sm" id="btnLoginPlaceholder" type="button">
                         Ingresar
                     </button>
 
@@ -94,8 +84,7 @@
 
                     <div class="col-lg-6">
 
-                        <span class="badge rounded-pill mb-3"
-                            style="background-color: #5bc0eb; color: #123b5d;">
+                        <span class="badge rounded-pill mb-3" style="background-color: #5bc0eb; color: #123b5d;">
                             Novedades 2026
                         </span>
 
@@ -114,9 +103,7 @@
                                 Explorar productos
                             </a>
 
-                            <button class="btn btn-outline-dark btn-lg"
-                                id="btnProjectInfo"
-                                type="button">
+                            <button class="btn btn-outline-dark btn-lg" id="btnProjectInfo" type="button">
                                 Más información
                             </button>
                         </div>
@@ -158,8 +145,7 @@
                                 <span class="dot"></span>
                             </div>
 
-                            <img src="img/lenovo-ideapad-5x.jpg"
-                                class="hero-product-image"
+                            <img src="img/lenovo-ideapad-5x.jpg" class="hero-product-image"
                                 alt="Notebook Lenovo IdeaPad 5x 2-in-1">
 
                             <div class="floating-card">
@@ -227,9 +213,7 @@
                 <div class="col-md-6 col-xl-3">
                     <article class="placeholder-product">
 
-                        <img src="img/notebook.jpg"
-                            class="card-img-top product-image"
-                            alt="Notebook Lenovo IdeaPad">
+                        <img src="img/notebook.jpg" class="card-img-top product-image" alt="Notebook Lenovo IdeaPad">
 
                         <div class="p-3">
 
@@ -249,7 +233,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <strong>USD 699</strong>
 
-                                <a href="producto.html" class="btn btn-primary btn-sm">
+                                <a href="producto.html?id=p3" class="btn btn-primary btn-sm">
                                     Ver producto
                                 </a>
                             </div>
@@ -263,8 +247,7 @@
                 <div class="col-md-6 col-xl-3">
                     <article class="placeholder-product">
 
-                        <img src="img/monitor.jpg"
-                            class="card-img-top product-image"
+                        <img src="img/monitor.jpg" class="card-img-top product-image"
                             alt="Monitor LG UltraWide 29 pulgadas">
 
                         <div class="p-3">
@@ -274,7 +257,7 @@
                             </span>
 
                             <h3 class="h5 mt-2">
-                                LG UltraWide 29"
+                                LG UltraWide 34"
                             </h3>
 
                             <p class="text-secondary small">
@@ -285,7 +268,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <strong>USD 329</strong>
 
-                                <a href="producto.html" class="btn btn-primary btn-sm">
+                                <a href="producto.html?id=p5" class="btn btn-primary btn-sm">
                                     Ver producto
                                 </a>
                             </div>
@@ -299,9 +282,7 @@
                 <div class="col-md-6 col-xl-3">
                     <article class="placeholder-product">
 
-                        <img src="img/mouse.jpg"
-                            class="card-img-top product-image"
-                            alt="Mouse Logitech MX Master 3S">
+                        <img src="img/mouse.jpg" class="card-img-top product-image" alt="Mouse Logitech MX Master 3S">
 
                         <div class="p-3">
 
@@ -321,7 +302,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <strong>USD 119</strong>
 
-                                <a href="producto.html" class="btn btn-primary btn-sm">
+                                <a href="producto.html?id=p4" class="btn btn-primary btn-sm">
                                     Ver producto
                                 </a>
                             </div>
@@ -335,8 +316,7 @@
                 <div class="col-md-6 col-xl-3">
                     <article class="placeholder-product">
 
-                        <img src="img/auricular.jpg"
-                            class="card-img-top product-image"
+                        <img src="img/auricular.jpg" class="card-img-top product-image"
                             alt="Auriculares JBL Tune 770NC">
 
                         <div class="p-3">
@@ -346,7 +326,7 @@
                             </span>
 
                             <h3 class="h5 mt-2">
-                                JBL Tune 770NC
+                                JBL Tune 780NC
                             </h3>
 
                             <p class="text-secondary small">
@@ -357,7 +337,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <strong>USD 149</strong>
 
-                                <a href="producto.html" class="btn btn-primary btn-sm">
+                                <a href="producto.html?id=p1" class="btn btn-primary btn-sm">
                                     Ver producto
                                 </a>
                             </div>
@@ -438,10 +418,7 @@
 
 
         <!-- MODAL -->
-        <div class="modal fade"
-            id="projectInfoModal"
-            tabindex="-1"
-            aria-labelledby="projectInfoModalLabel"
+        <div class="modal fade" id="projectInfoModal" tabindex="-1" aria-labelledby="projectInfoModalLabel"
             aria-hidden="true">
 
             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -454,10 +431,7 @@
                             Sobre Xentro Tecno
                         </h2>
 
-                        <button class="btn-close"
-                            type="button"
-                            data-bs-dismiss="modal"
-                            aria-label="Cerrar">
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Cerrar">
                         </button>
 
                     </div>
@@ -610,10 +584,7 @@
                     Xentro Tecno
                 </strong>
 
-                <button class="btn-close"
-                    type="button"
-                    data-bs-dismiss="toast"
-                    aria-label="Cerrar">
+                <button class="btn-close" type="button" data-bs-dismiss="toast" aria-label="Cerrar">
                 </button>
 
             </div>
