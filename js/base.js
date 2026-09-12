@@ -30,4 +30,22 @@ document.addEventListener("DOMContentLoaded", () => {
             ).show()
     );
 
+        // Actualizar cantidad de productos del carrito
+    const contadorCarrito = document.querySelector("#contadorCarrito");
+
+    if (contadorCarrito) {
+
+        const carrito = JSON.parse(
+            localStorage.getItem("carrito")
+        ) || [];
+
+        const cantidadTotal = carrito.reduce(
+            (total, item) => total + item.cantidad,
+            0
+        );
+
+        contadorCarrito.textContent = cantidadTotal;
+
+    }
+
 });
