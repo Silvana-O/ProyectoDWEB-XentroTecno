@@ -32,24 +32,36 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    const listaCaracteristicas = producto.caracteristicas
+        .map(caracteristica => `<li>${caracteristica}</li>`)
+        .join("");
+
     contenedor.innerHTML = `
-        <div class="row g-4 align-items-center">
 
-            <div class="col-12 col-md-6">
+        <!-- INFORMACIÓN PRINCIPAL -->
 
-                <div class="text-center">
+        <div class="row g-5 align-items-start">
+
+            <!-- IMAGEN -->
+
+            <div class="col-12 col-lg-6">
+
+                <div class="text-center p-3 bg-white rounded shadow-sm">
 
                     <img
                         src="${producto.imagen}"
                         alt="${producto.nombre}"
-                        class="img-fluid rounded shadow-sm"
+                        class="img-fluid rounded"
                     >
 
                 </div>
 
             </div>
 
-            <div class="col-12 col-md-6">
+
+            <!-- INFORMACIÓN DEL PRODUCTO -->
+
+            <div class="col-12 col-lg-6">
 
                 <span class="badge text-bg-secondary mb-3">
                     ${producto.categoria}
@@ -59,18 +71,64 @@ document.addEventListener("DOMContentLoaded", () => {
                     ${producto.nombre}
                 </h2>
 
-                <p class="lead">
+                <p class="lead mb-4">
                     ${producto.descripcion}
                 </p>
 
-                <p class="fs-3 fw-bold mb-3">
-                    USD ${producto.precio}
-                </p>
 
-                <p>
+                <div class="border rounded p-4 mb-4">
+
+                    <h3 class="h5 mb-3">
+                        Información del producto
+                    </h3>
+
+                    <div class="row g-3">
+
+                        <div class="col-12 col-sm-6">
+
+                            <p class="mb-0">
+                                <strong>Marca</strong><br>
+                                ${producto.marca}
+                            </p>
+
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+
+                            <p class="mb-0">
+                                <strong>Modelo</strong><br>
+                                ${producto.modelo}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PRECIO -->
+
+                <div class="mb-3">
+
+                    <span class="fs-2 fw-bold">
+                        USD ${producto.precio}
+                    </span>
+
+                </div>
+
+
+                <!-- STOCK -->
+
+                <p class="mb-3">
+
                     <strong>Stock disponible:</strong>
                     ${producto.stock}
+
                 </p>
+
+
+                <!-- CANTIDAD -->
 
                 <div class="mb-3">
 
@@ -97,6 +155,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 </div>
 
+
+                <!-- BOTÓN -->
+
                 <button
                     type="button"
                     id="btnAgregarCarrito"
@@ -109,6 +170,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
         </div>
 
+
+        <!-- CARACTERÍSTICAS -->
+
+        <div class="border rounded p-4 mt-5">
+
+            <h3 class="h5 mb-3">
+                Características
+            </h3>
+
+            <div class="row row-cols-1 row-cols-md-2 g-2">
+
+                ${producto.caracteristicas
+                    .map(caracteristica => `
+                        <div class="col">
+                            <div class="p-2">
+                                <span class="me-2">•</span>
+                                ${caracteristica}
+                            </div>
+                        </div>
+                    `)
+                    .join("")}
+
+            </div>
+
+        </div>
+
+
+        <!-- VOLVER -->
+
         <div class="text-center mt-4">
 
             <a
@@ -119,11 +209,19 @@ document.addEventListener("DOMContentLoaded", () => {
             </a>
 
         </div>
+
     `;
 
-    const cantidadInput = document.querySelector("#cantidadProducto");
-    const mensajeCantidad = document.querySelector("#mensajeCantidad");
-    const btnAgregarCarrito = document.querySelector("#btnAgregarCarrito");
+
+    const cantidadInput =
+        document.querySelector("#cantidadProducto");
+
+    const mensajeCantidad =
+        document.querySelector("#mensajeCantidad");
+
+    const btnAgregarCarrito =
+        document.querySelector("#btnAgregarCarrito");
+
 
     cantidadInput.addEventListener("input", () => {
 
@@ -131,6 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         mensajeCantidad.classList.remove("text-success");
         mensajeCantidad.classList.add("text-danger");
+
 
         if (cantidad < 1) {
 
@@ -150,9 +249,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
+
     btnAgregarCarrito.addEventListener("click", () => {
 
         const cantidad = Number(cantidadInput.value);
+
 
         if (
             cantidad < 1 ||
@@ -169,18 +270,22 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+
         let carrito = JSON.parse(
             localStorage.getItem("carrito")
         ) || [];
+
 
         const productoExistente = carrito.find(
             item => item.id === producto.id
         );
 
+
         if (productoExistente) {
 
             const nuevaCantidad =
                 productoExistente.cantidad + cantidad;
+
 
             if (nuevaCantidad > producto.stock) {
 
@@ -193,24 +298,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            productoExistente.cantidad = nuevaCantidad;
+
+            productoExistente.cantidad =
+                nuevaCantidad;
 
         } else {
 
             carrito.push({
+
                 id: producto.id,
                 nombre: producto.nombre,
                 precio: producto.precio,
                 imagen: producto.imagen,
                 cantidad: cantidad
+
             });
 
         }
+
 
         localStorage.setItem(
             "carrito",
             JSON.stringify(carrito)
         );
+
 
         mensajeCantidad.classList.remove("text-danger");
         mensajeCantidad.classList.add("text-success");
@@ -218,14 +329,24 @@ document.addEventListener("DOMContentLoaded", () => {
         mensajeCantidad.textContent =
             "Producto agregado al carrito.";
 
-        let btnVerCarrito = document.querySelector("#btnVerCarrito");
+
+        let btnVerCarrito =
+            document.querySelector("#btnVerCarrito");
+
 
         if (!btnVerCarrito) {
-            btnVerCarrito = document.createElement("a");
 
-            btnVerCarrito.id = "btnVerCarrito";
-            btnVerCarrito.href = "carrito.html";
-            btnVerCarrito.textContent = "Ver carrito";
+            btnVerCarrito =
+                document.createElement("a");
+
+            btnVerCarrito.id =
+                "btnVerCarrito";
+
+            btnVerCarrito.href =
+                "carrito.html";
+
+            btnVerCarrito.textContent =
+                "Ver carrito";
 
             btnVerCarrito.classList.add(
                 "btn",
@@ -237,6 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "afterend",
                 btnVerCarrito
             );
+
         }
 
     });

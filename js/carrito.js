@@ -195,7 +195,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         mostrarCarrito();
 
+                    } else {
+
+                        alert("Ya alcanzaste el stock máximo disponible para este producto.");    
+
                     }
+
 
                 }
 
