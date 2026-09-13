@@ -8,7 +8,7 @@ Silvana Ottonelli
 
 Xentro Tecno es un e-commerce dedicado a la venta de productos tecnológicos. El sitio permite explorar una selección de notebooks, monitores, periféricos, audio y accesorios tecnológicos, ofreciendo una interfaz moderna, clara y adaptable a distintos dispositivos.
 
-Este proyecto fue desarrollado como parte del Taller Integrador de Sistemas – Desarrollo Web.
+Este proyecto fue desarrollado como parte del Proyecto académico de Desarrollo Web.
 
 ## Público objetivo
 
@@ -50,20 +50,19 @@ Este proyecto fue desarrollado como parte del Taller Integrador de Sistemas – 
 │   └── styles.css
 │
 ├── js/
+│   ├── base.js
 │   ├── productos.js
 │   ├── catalogo.js
 │   ├── producto.js
 │   └── carrito.js
 │
-└── img/
+├── img/
+│   ├── auricular.jpg
+│   ├── lenovo-ideapad-5x.jpg
+│   ├── monitor.jpg
+│   ├── mouse.jpg
+│   └── notebook.jpg
 ```
-
-## Instrucciones de ejecución
-
-1. Clonar el repositorio.
-2. Abrir la carpeta del proyecto en Visual Studio Code.
-3. Ejecutar el proyecto utilizando Live Server.
-4. Acceder a `index.html` desde el navegador.
 
 ## Funcionalidades desarrolladas en el Sprint 1
 
