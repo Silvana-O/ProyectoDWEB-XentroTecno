@@ -3,7 +3,7 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
+    apiKey: "AIzaSyDg4XFahNYSdFHBPNCh56Dhl_r3s3vN3S4",
     authDomain: "xentrotecno-e95f2.firebaseapp.com",
     projectId: "xentrotecno-e95f2",
     storageBucket: "xentrotecno-e95f2.firebasestorage.app",
