@@ -15,13 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
         bootstrap.Toast.getOrCreateInstance(t).show();
     };
 
-
-    document.querySelector("#btnLoginPlaceholder")?.addEventListener(
-        "click",
-        () => show("El inicio de sesión será desarrollado en el Sprint 3.")
-    );
-
-
     document.querySelector("#btnProjectInfo")?.addEventListener(
         "click",
         () =>

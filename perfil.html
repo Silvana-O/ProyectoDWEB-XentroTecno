@@ -28,7 +28,9 @@
                         <li class="nav-item"><a class="nav-link" data-page="perfil" href="perfil.html">Mi perfil</a></li>
                         <li class="nav-item"><a class="nav-link" data-page="admin" href="admin.html">Administración</a></li>
                     </ul>
-                    <button class="btn btn-outline-light btn-sm" id="btnLoginPlaceholder">Ingresar</button>
+                    <a href="login.html" class="btn btn-outline-light btn-sm">
+                        Ingresar
+                    </a>
                 </div>
             </div>
         </nav>
@@ -37,25 +39,78 @@
         
     <main class='flex-grow-1'>
         <div class="container py-5">
-            <section class="locked-module">
-                <div class="locked-icon">🔒</div>
-                <span class="badge rounded-pill text-bg-warning mb-3">Sprint 3 · Semanas 9 a 12</span>
-                <h1>Área privada del usuario</h1>
-                <p class="lead">No podrá visualizarse sin iniciar sesión.</p>
-                <div class="locked-card">
-                    <h2 class="h5">Funcionalidad en desarrollo</h2>
-                    <p>Este módulo forma parte de la arquitectura final, pero su código deberá desarrollarse en el
-                        sprint indicado.</p>
-                    <ul>
-                        <li>Registro</li>
-                        <li>Inicio y cierre de sesión</li>
-                        <li>Persistencia de sesión</li>
-                        <li>Protección de páginas</li>
-                        <li>Datos del usuario</li>
-                        <li>Historial de pedidos</li>
-                    </ul>
+            <section class="container py-5">
+
+                <div class="row justify-content-center">
+
+                    <div class="col-12 col-md-8 col-lg-6">
+
+                        <div class="card shadow-sm border-0">
+
+                            <div class="card-body p-4 p-md-5">
+
+                                <div class="text-center mb-4">
+
+                                    <div class="brand-mark mx-auto mb-3">
+                                        X
+                                    </div>
+
+                                    <h1 class="h3 fw-bold">
+                                        Mi perfil
+                                    </h1>
+
+                                    <p class="text-muted">
+                                        Datos de tu cuenta en Xentro Tecno
+                                    </p>
+
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-semibold">
+                                        Nombre
+                                    </label>
+
+                                    <p
+                                        id="nombreUsuario"
+                                        class="form-control bg-light"
+                                    >
+                                        Cargando...
+                                    </p>
+
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label class="form-label fw-semibold">
+                                        Correo electrónico
+                                    </label>
+
+                                    <p
+                                        id="emailUsuario"
+                                        class="form-control bg-light"
+                                    >
+                                        Cargando...
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    id="btnCerrarSesion"
+                                    class="btn btn-outline-danger w-100"
+                                >
+                                    Cerrar sesión
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
-                <a class="btn btn-outline-primary mt-3" href="index.html">Volver al inicio</a>
+
             </section>
         </div>
     </main>
@@ -139,6 +194,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/base.js"></script>
+    <script type="module" src="js/perfil.js"></script>
 </body>
 
 </html>

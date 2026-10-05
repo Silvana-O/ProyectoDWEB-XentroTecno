@@ -2,7 +2,9 @@ import { auth, db } from "./firebase/config.js";
 
 import {
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    setPersistence,
+    browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
 import {
@@ -158,6 +160,8 @@ formLogin?.addEventListener("submit", async (event) => {
 
 
     try {
+
+        await setPersistence(auth, browserLocalPersistence);
 
         await signInWithEmailAndPassword(
             auth,
