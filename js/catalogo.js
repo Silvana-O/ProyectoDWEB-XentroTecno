@@ -1,4 +1,12 @@
-document.addEventListener("DOMContentLoaded", () => {
+import { db } from "./firebase/config.js";
+
+import {
+    collection,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+
+document.addEventListener("DOMContentLoaded", async () => {
 
     const contenedor = document.querySelector("#contenedorProductos");
     const buscador = document.querySelector("#buscador");
@@ -6,20 +14,67 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnLimpiarFiltros = document.querySelector("#btnLimpiarFiltros");
     const mensajeSinResultados = document.querySelector("#mensajeSinResultados");
 
+    let productos = [];
+
+
+    // Cargar productos desde Firestore
+    async function cargarProductos() {
+
+        try {
+
+            const referenciaProductos = collection(db, "productos");
+            const snapshot = await getDocs(referenciaProductos);
+
+            productos = snapshot.docs.map(documento => ({
+                id: documento.id,
+                ...documento.data()
+            }));
+
+            console.log("Productos cargados desde Firestore:", productos);
+
+            crearOpcionesCategorias();
+            mostrarProductos(productos);
+
+        } catch (error) {
+
+            console.error("Error al cargar los productos desde Firestore:", error);
+
+            contenedor.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-danger">
+                        No se pudieron cargar los productos. Intentá nuevamente más tarde.
+                    </div>
+                </div>
+            `;
+
+        }
+
+    }
+
 
     // Crear las opciones de categorías
-    const categorias = [...new Set(productos.map(producto => producto.categoria))];
+    function crearOpcionesCategorias() {
 
-    categorias.forEach(categoria => {
+        filtroCategoria.innerHTML = `
+            <option value="">Todas las categorías</option>
+        `;
 
-        const opcion = document.createElement("option");
+        const categorias = [
+            ...new Set(productos.map(producto => producto.categoria))
+        ];
 
-        opcion.value = categoria;
-        opcion.textContent = categoria;
+        categorias.forEach(categoria => {
 
-        filtroCategoria.appendChild(opcion);
+            const opcion = document.createElement("option");
 
-    });
+            opcion.value = categoria;
+            opcion.textContent = categoria;
+
+            filtroCategoria.appendChild(opcion);
+
+        });
+
+    }
 
 
     // Mostrar productos
@@ -198,8 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // Aplicar búsqueda y filtro
-
+    // Normalizar texto para búsquedas
     function normalizarTexto(texto) {
 
         return texto
@@ -209,18 +263,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+
+    // Aplicar búsqueda y filtro
     function aplicarFiltros() {
 
-        const textoBuscado = normalizarTexto(buscador.value.trim());
-        const categoriaSeleccionada = filtroCategoria.value;
+        const textoBuscado =
+            normalizarTexto(buscador.value.trim());
+
+        const categoriaSeleccionada =
+            filtroCategoria.value;
+
 
         const productosFiltrados = productos.filter(producto => {
 
-            const nombre = normalizarTexto(producto.nombre);
-            const descripcion = normalizarTexto(producto.descripcion);
-            const categoria = normalizarTexto(producto.categoria);
-            const marca = normalizarTexto(producto.marca);
-            const modelo = normalizarTexto(producto.modelo);
+            const nombre =
+                normalizarTexto(producto.nombre);
+
+            const descripcion =
+                normalizarTexto(producto.descripcion);
+
+            const categoria =
+                normalizarTexto(producto.categoria);
+
+            const marca =
+                normalizarTexto(producto.marca);
+
+            const modelo =
+                normalizarTexto(producto.modelo);
+
 
             let textoParaBuscar = `
                 ${nombre}
@@ -230,41 +300,51 @@ document.addEventListener("DOMContentLoaded", () => {
                 ${modelo}
             `;
 
+
             // Sinónimos para monitores
             if (
                 categoria.includes("monitor") ||
                 nombre.includes("ultrawide")
             ) {
+
                 textoParaBuscar += `
                     monitor
                     pantalla
                     display
                 `;
+
             }
+
 
             // Sinónimos para mouse
             if (
-                categoria.includes("periferico") ||
-                nombre.includes("mouse")
+                nombre.includes("mouse") ||
+                modelo.includes("mouse")
             ) {
+
                 textoParaBuscar += `
                     mouse
                     raton
                 `;
+
             }
+
 
             // Sinónimos para notebooks
             if (
                 categoria.includes("notebook") ||
                 nombre.includes("notebook")
             ) {
+
                 textoParaBuscar += `
                     notebook
                     laptop
                     computadora
                     ordenador
                 `;
+
             }
+
 
             const coincideTexto =
                 textoParaBuscar.includes(textoBuscado);
@@ -273,34 +353,46 @@ document.addEventListener("DOMContentLoaded", () => {
                 categoriaSeleccionada === "" ||
                 producto.categoria === categoriaSeleccionada;
 
+
             return coincideTexto && coincideCategoria;
 
         });
 
+
         mostrarProductos(productosFiltrados);
+
     }
 
 
     // Evento del buscador
-    buscador.addEventListener("input", aplicarFiltros);
+    buscador.addEventListener(
+        "input",
+        aplicarFiltros
+    );
 
 
     // Evento del filtro de categoría
-    filtroCategoria.addEventListener("change", aplicarFiltros);
+    filtroCategoria.addEventListener(
+        "change",
+        aplicarFiltros
+    );
 
 
     // Limpiar filtros
-    btnLimpiarFiltros.addEventListener("click", () => {
+    btnLimpiarFiltros.addEventListener(
+        "click",
+        () => {
 
-        buscador.value = "";
-        filtroCategoria.value = "";
+            buscador.value = "";
+            filtroCategoria.value = "";
 
-        mostrarProductos(productos);
+            mostrarProductos(productos);
 
-    });
+        }
+    );
 
 
-    // Mostrar todos los productos al cargar
-    mostrarProductos(productos);
+    // Cargar productos desde Firestore
+    await cargarProductos();
 
 });

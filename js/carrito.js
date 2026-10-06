@@ -1,14 +1,81 @@
-document.addEventListener("DOMContentLoaded", () => {
+import { db } from "./firebase/config.js";
 
-    const contenedorCarrito = document.querySelector("#contenedorCarrito");
-    const mensajeCarritoVacio = document.querySelector("#mensajeCarritoVacio");
-    const resumenCarrito = document.querySelector("#resumenCarrito");
+import {
+    collection,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    const contenedorCarrito =
+        document.querySelector("#contenedorCarrito");
+
+    const mensajeCarritoVacio =
+        document.querySelector("#mensajeCarritoVacio");
+
+    const resumenCarrito =
+        document.querySelector("#resumenCarrito");
+
 
     let carrito = JSON.parse(
         localStorage.getItem("carrito")
     ) || [];
 
 
+    let productos = [];
+
+
+    // Cargar productos desde Firestore
+    async function cargarProductos() {
+
+        try {
+
+            const referenciaProductos =
+                collection(db, "productos");
+
+            const snapshot =
+                await getDocs(referenciaProductos);
+
+
+            productos = snapshot.docs.map(documento => ({
+                id: documento.id,
+                ...documento.data()
+            }));
+
+
+            console.log(
+                "Productos cargados desde Firestore:",
+                productos
+            );
+
+
+            mostrarCarrito();
+
+
+        } catch (error) {
+
+            console.error(
+                "Error al cargar los productos desde Firestore:",
+                error
+            );
+
+
+            contenedorCarrito.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-danger text-center">
+                        No se pudieron cargar los productos del carrito.
+                        Intentá nuevamente más tarde.
+                    </div>
+                </div>
+            `;
+
+        }
+
+    }
+
+
+    // Guardar carrito en LocalStorage
     function guardarCarrito() {
 
         localStorage.setItem(
@@ -19,9 +86,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    // Mostrar carrito
     function mostrarCarrito() {
 
         contenedorCarrito.innerHTML = "";
+
 
         if (carrito.length === 0) {
 
@@ -29,15 +98,20 @@ document.addEventListener("DOMContentLoaded", () => {
             resumenCarrito.classList.add("d-none");
 
             return;
+
         }
+
 
         mensajeCarritoVacio.classList.add("d-none");
         resumenCarrito.classList.remove("d-none");
 
+
         const total = carrito.reduce(
-            (acumulado, item) => acumulado + item.precio * item.cantidad,
+            (acumulado, item) =>
+                acumulado + item.precio * item.cantidad,
             0
         );
+
 
         document.querySelector("#totalCarrito").textContent =
             `USD ${total}`;
@@ -45,16 +119,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         carrito.forEach(item => {
 
-            const producto = productos.find(
-                producto => producto.id === item.id
-            );
+            const producto =
+                productos.find(
+                    producto => producto.id === item.id
+                );
+
 
             if (!producto) {
                 return;
             }
 
 
-            const tarjeta = document.createElement("div");
+            const tarjeta =
+                document.createElement("div");
+
 
             tarjeta.classList.add("col-12");
 
@@ -158,6 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    // Configurar botones
     function configurarEventos() {
 
         const botonesAumentar =
@@ -170,19 +249,25 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll(".btn-eliminar");
 
 
+        // Aumentar cantidad
         botonesAumentar.forEach(boton => {
 
             boton.addEventListener("click", () => {
 
-                const id = boton.dataset.id;
+                const id =
+                    boton.dataset.id;
 
-                const item = carrito.find(
-                    producto => producto.id === id
-                );
 
-                const producto = productos.find(
-                    producto => producto.id === id
-                );
+                const item =
+                    carrito.find(
+                        producto => producto.id === id
+                    );
+
+
+                const producto =
+                    productos.find(
+                        producto => producto.id === id
+                    );
 
 
                 if (item && producto) {
@@ -197,10 +282,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     } else {
 
-                        alert("Ya alcanzaste el stock máximo disponible para este producto.");    
+                        alert(
+                            "Ya alcanzaste el stock máximo disponible para este producto."
+                        );
 
                     }
-
 
                 }
 
@@ -209,15 +295,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 
+        // Disminuir cantidad
         botonesDisminuir.forEach(boton => {
 
             boton.addEventListener("click", () => {
 
-                const id = boton.dataset.id;
+                const id =
+                    boton.dataset.id;
 
-                const item = carrito.find(
-                    producto => producto.id === id
-                );
+
+                const item =
+                    carrito.find(
+                        producto => producto.id === id
+                    );
 
 
                 if (item) {
@@ -228,11 +318,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     } else {
 
-                        carrito = carrito.filter(
-                            producto => producto.id !== id
-                        );
+                        carrito =
+                            carrito.filter(
+                                producto =>
+                                    producto.id !== id
+                            );
 
                     }
+
 
                     guardarCarrito();
 
@@ -245,15 +338,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 
+        // Eliminar producto
         botonesEliminar.forEach(boton => {
 
             boton.addEventListener("click", () => {
 
-                const id = boton.dataset.id;
+                const id =
+                    boton.dataset.id;
 
-                carrito = carrito.filter(
-                    producto => producto.id !== id
-                );
+
+                carrito =
+                    carrito.filter(
+                        producto =>
+                            producto.id !== id
+                    );
+
 
                 guardarCarrito();
 
@@ -266,6 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    mostrarCarrito();
+    // Cargar productos y mostrar carrito
+    await cargarProductos();
 
 });

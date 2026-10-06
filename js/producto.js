@@ -1,21 +1,79 @@
-document.addEventListener("DOMContentLoaded", () => {
+import { db } from "./firebase/config.js";
 
-    const contenedor = document.querySelector("#productoDetalle");
+import {
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-    const parametros = new URLSearchParams(window.location.search);
-    const idProducto = parametros.get("id");
 
-    const producto = productos.find(
-        producto => producto.id === idProducto
-    );
+document.addEventListener("DOMContentLoaded", async () => {
 
-    if (!producto) {
+    const contenedor =
+        document.querySelector("#productoDetalle");
+
+    const parametros =
+        new URLSearchParams(window.location.search);
+
+    const idProducto =
+        parametros.get("id");
+
+
+    // Verificar que exista un ID en la URL
+    if (!idProducto) {
+
+        mostrarProductoNoEncontrado();
+        return;
+
+    }
+
+
+    let producto;
+
+
+    // Obtener producto desde Firestore
+    try {
+
+        const referenciaProducto =
+            doc(db, "productos", idProducto);
+
+        const documentoProducto =
+            await getDoc(referenciaProducto);
+
+
+        if (!documentoProducto.exists()) {
+
+            mostrarProductoNoEncontrado();
+            return;
+
+        }
+
+
+        producto = {
+            id: documentoProducto.id,
+            ...documentoProducto.data()
+        };
+
+
+        console.log(
+            "Producto cargado desde Firestore:",
+            producto
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error al cargar el producto desde Firestore:",
+            error
+        );
+
 
         contenedor.innerHTML = `
-            <div class="alert alert-warning text-center">
-                <h2 class="h5">Producto no encontrado</h2>
+            <div class="alert alert-danger text-center">
+                <h2 class="h5">No se pudo cargar el producto</h2>
                 <p class="mb-0">
-                    El producto que estás buscando no existe.
+                    Ocurrió un error al obtener la información.
+                    Intentá nuevamente más tarde.
                 </p>
             </div>
 
@@ -30,337 +88,424 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         return;
+
     }
 
-    const listaCaracteristicas = producto.caracteristicas
-        .map(caracteristica => `<li>${caracteristica}</li>`)
-        .join("");
 
-    contenedor.innerHTML = `
-
-        <!-- INFORMACIÓN PRINCIPAL -->
-
-        <div class="row g-5 align-items-start">
-
-            <!-- IMAGEN -->
-
-            <div class="col-12 col-lg-6">
-
-                <div class="text-center p-3 bg-white rounded shadow-sm">
-
-                    <img
-                        src="${producto.imagen}"
-                        alt="${producto.nombre}"
-                        class="img-fluid rounded"
-                    >
-
-                </div>
-
-            </div>
+    // Mostrar producto
+    mostrarProducto(producto);
 
 
-            <!-- INFORMACIÓN DEL PRODUCTO -->
+    function mostrarProducto(producto) {
 
-            <div class="col-12 col-lg-6">
-
-                <span class="badge text-bg-secondary mb-3">
-                    ${producto.categoria}
-                </span>
-
-                <h2 class="mb-3">
-                    ${producto.nombre}
-                </h2>
-
-                <p class="lead mb-4">
-                    ${producto.descripcion}
-                </p>
+        const caracteristicas =
+            Array.isArray(producto.caracteristicas)
+                ? producto.caracteristicas
+                : [];
 
 
-                <div class="border rounded p-4 mb-4">
+        contenedor.innerHTML = `
 
-                    <h3 class="h5 mb-3">
-                        Información del producto
-                    </h3>
+            <!-- INFORMACIÓN PRINCIPAL -->
 
-                    <div class="row g-3">
+            <div class="row g-5 align-items-start">
 
-                        <div class="col-12 col-sm-6">
+                <!-- IMAGEN -->
 
-                            <p class="mb-0">
-                                <strong>Marca</strong><br>
-                                ${producto.marca}
-                            </p>
+                <div class="col-12 col-lg-6">
 
-                        </div>
+                    <div class="text-center p-3 bg-white rounded shadow-sm">
 
-                        <div class="col-12 col-sm-6">
-
-                            <p class="mb-0">
-                                <strong>Modelo</strong><br>
-                                ${producto.modelo}
-                            </p>
-
-                        </div>
+                        <img
+                            src="${producto.imagen}"
+                            alt="${producto.nombre}"
+                            class="img-fluid rounded"
+                        >
 
                     </div>
 
                 </div>
 
 
-                <!-- PRECIO -->
+                <!-- INFORMACIÓN DEL PRODUCTO -->
 
-                <div class="mb-3">
+                <div class="col-12 col-lg-6">
 
-                    <span class="fs-2 fw-bold">
-                        USD ${producto.precio}
+                    <span class="badge text-bg-secondary mb-3">
+                        ${producto.categoria}
                     </span>
 
-                </div>
+                    <h2 class="mb-3">
+                        ${producto.nombre}
+                    </h2>
+
+                    <p class="lead mb-4">
+                        ${producto.descripcion}
+                    </p>
 
 
-                <!-- STOCK -->
+                    <div class="border rounded p-4 mb-4">
 
-                <p class="mb-3">
+                        <h3 class="h5 mb-3">
+                            Información del producto
+                        </h3>
 
-                    <strong>Stock disponible:</strong>
-                    ${producto.stock}
+                        <div class="row g-3">
 
-                </p>
+                            <div class="col-12 col-sm-6">
 
+                                <p class="mb-0">
+                                    <strong>Marca</strong><br>
+                                    ${producto.marca}
+                                </p>
 
-                <!-- CANTIDAD -->
-
-                <div class="mb-3">
-
-                    <label
-                        for="cantidadProducto"
-                        class="form-label fw-semibold"
-                    >
-                        Cantidad
-                    </label>
-
-                    <input
-                        type="number"
-                        id="cantidadProducto"
-                        class="form-control"
-                        value="1"
-                        min="1"
-                        max="${producto.stock}"
-                    >
-
-                    <div
-                        id="mensajeCantidad"
-                        class="text-danger small mt-2"
-                    ></div>
-
-                </div>
-
-
-                <!-- BOTÓN -->
-
-                <button
-                    type="button"
-                    id="btnAgregarCarrito"
-                    class="btn btn-primary w-100"
-                >
-                    Agregar al carrito
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- CARACTERÍSTICAS -->
-
-        <div class="border rounded p-4 mt-5">
-
-            <h3 class="h5 mb-3">
-                Características
-            </h3>
-
-            <div class="row row-cols-1 row-cols-md-2 g-2">
-
-                ${producto.caracteristicas
-                    .map(caracteristica => `
-                        <div class="col">
-                            <div class="p-2">
-                                <span class="me-2">•</span>
-                                ${caracteristica}
                             </div>
+
+                            <div class="col-12 col-sm-6">
+
+                                <p class="mb-0">
+                                    <strong>Modelo</strong><br>
+                                    ${producto.modelo}
+                                </p>
+
+                            </div>
+
                         </div>
-                    `)
-                    .join("")}
+
+                    </div>
+
+
+                    <!-- PRECIO -->
+
+                    <div class="mb-3">
+
+                        <span class="fs-2 fw-bold">
+                            USD ${producto.precio}
+                        </span>
+
+                    </div>
+
+
+                    <!-- STOCK -->
+
+                    <p class="mb-3">
+
+                        <strong>Stock disponible:</strong>
+                        ${producto.stock}
+
+                    </p>
+
+
+                    <!-- CANTIDAD -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="cantidadProducto"
+                            class="form-label fw-semibold"
+                        >
+                            Cantidad
+                        </label>
+
+                        <input
+                            type="number"
+                            id="cantidadProducto"
+                            class="form-control"
+                            value="1"
+                            min="1"
+                            max="${producto.stock}"
+                        >
+
+                        <div
+                            id="mensajeCantidad"
+                            class="text-danger small mt-2"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- BOTÓN -->
+
+                    <button
+                        type="button"
+                        id="btnAgregarCarrito"
+                        class="btn btn-primary w-100"
+                        ${producto.stock <= 0 ? "disabled" : ""}
+                    >
+                        ${producto.stock <= 0
+                            ? "Producto sin stock"
+                            : "Agregar al carrito"}
+                    </button>
+
+                </div>
 
             </div>
 
-        </div>
+
+            <!-- CARACTERÍSTICAS -->
+
+            <div class="border rounded p-4 mt-5">
+
+                <h3 class="h5 mb-3">
+                    Características
+                </h3>
+
+                <div class="row row-cols-1 row-cols-md-2 g-2">
+
+                    ${caracteristicas
+                        .map(caracteristica => `
+                            <div class="col">
+                                <div class="p-2">
+                                    <span class="me-2">•</span>
+                                    ${caracteristica}
+                                </div>
+                            </div>
+                        `)
+                        .join("")}
+
+                </div>
+
+            </div>
 
 
-        <!-- VOLVER -->
+            <!-- VOLVER -->
 
-        <div class="text-center mt-4">
+            <div class="text-center mt-4">
 
-            <a
-                href="catalogo.html"
-                class="btn btn-outline-primary"
-            >
-                Ir al catálogo
-            </a>
+                <a
+                    href="catalogo.html"
+                    class="btn btn-outline-primary"
+                >
+                    Ir al catálogo
+                </a>
 
-        </div>
+            </div>
 
-    `;
-
-
-    const cantidadInput =
-        document.querySelector("#cantidadProducto");
-
-    const mensajeCantidad =
-        document.querySelector("#mensajeCantidad");
-
-    const btnAgregarCarrito =
-        document.querySelector("#btnAgregarCarrito");
+        `;
 
 
-    cantidadInput.addEventListener("input", () => {
+        const cantidadInput =
+            document.querySelector("#cantidadProducto");
 
-        const cantidad = Number(cantidadInput.value);
+        const mensajeCantidad =
+            document.querySelector("#mensajeCantidad");
 
-        mensajeCantidad.classList.remove("text-success");
-        mensajeCantidad.classList.add("text-danger");
-
-
-        if (cantidad < 1) {
-
-            mensajeCantidad.textContent =
-                "La cantidad mínima es 1.";
-
-        } else if (cantidad > producto.stock) {
-
-            mensajeCantidad.textContent =
-                `La cantidad no puede superar el stock disponible (${producto.stock}).`;
-
-        } else {
-
-            mensajeCantidad.textContent = "";
-
-        }
-
-    });
+        const btnAgregarCarrito =
+            document.querySelector("#btnAgregarCarrito");
 
 
-    btnAgregarCarrito.addEventListener("click", () => {
+        // Validar cantidad
+        cantidadInput.addEventListener("input", () => {
 
-        const cantidad = Number(cantidadInput.value);
-
-
-        if (
-            cantidad < 1 ||
-            cantidad > producto.stock ||
-            !Number.isInteger(cantidad)
-        ) {
-
-            mensajeCantidad.classList.remove("text-success");
-            mensajeCantidad.classList.add("text-danger");
-
-            mensajeCantidad.textContent =
-                `Ingresá una cantidad válida entre 1 y ${producto.stock}.`;
-
-            return;
-        }
+            const cantidad =
+                Number(cantidadInput.value);
 
 
-        let carrito = JSON.parse(
-            localStorage.getItem("carrito")
-        ) || [];
+            mensajeCantidad.classList.remove(
+                "text-success"
+            );
+
+            mensajeCantidad.classList.add(
+                "text-danger"
+            );
 
 
-        const productoExistente = carrito.find(
-            item => item.id === producto.id
-        );
-
-
-        if (productoExistente) {
-
-            const nuevaCantidad =
-                productoExistente.cantidad + cantidad;
-
-
-            if (nuevaCantidad > producto.stock) {
-
-                mensajeCantidad.classList.remove("text-success");
-                mensajeCantidad.classList.add("text-danger");
+            if (cantidad < 1) {
 
                 mensajeCantidad.textContent =
-                    `No podés agregar esa cantidad. El stock disponible es ${producto.stock}.`;
+                    "La cantidad mínima es 1.";
 
-                return;
+            } else if (cantidad > producto.stock) {
+
+                mensajeCantidad.textContent =
+                    `La cantidad no puede superar el stock disponible (${producto.stock}).`;
+
+            } else if (!Number.isInteger(cantidad)) {
+
+                mensajeCantidad.textContent =
+                    "Ingresá una cantidad entera.";
+
+            } else {
+
+                mensajeCantidad.textContent = "";
+
             }
 
-
-            productoExistente.cantidad =
-                nuevaCantidad;
-
-        } else {
-
-            carrito.push({
-
-                id: producto.id,
-                nombre: producto.nombre,
-                precio: producto.precio,
-                imagen: producto.imagen,
-                cantidad: cantidad
-
-            });
-
-        }
+        });
 
 
-        localStorage.setItem(
-            "carrito",
-            JSON.stringify(carrito)
+        // Agregar al carrito
+        btnAgregarCarrito.addEventListener(
+            "click",
+            () => {
+
+                const cantidad =
+                    Number(cantidadInput.value);
+
+
+                if (
+                    cantidad < 1 ||
+                    cantidad > producto.stock ||
+                    !Number.isInteger(cantidad)
+                ) {
+
+                    mensajeCantidad.classList.remove(
+                        "text-success"
+                    );
+
+                    mensajeCantidad.classList.add(
+                        "text-danger"
+                    );
+
+                    mensajeCantidad.textContent =
+                        `Ingresá una cantidad válida entre 1 y ${producto.stock}.`;
+
+                    return;
+
+                }
+
+
+                let carrito =
+                    JSON.parse(
+                        localStorage.getItem("carrito")
+                    ) || [];
+
+
+                const productoExistente =
+                    carrito.find(
+                        item => item.id === producto.id
+                    );
+
+
+                if (productoExistente) {
+
+                    const nuevaCantidad =
+                        productoExistente.cantidad +
+                        cantidad;
+
+
+                    if (nuevaCantidad > producto.stock) {
+
+                        mensajeCantidad.classList.remove(
+                            "text-success"
+                        );
+
+                        mensajeCantidad.classList.add(
+                            "text-danger"
+                        );
+
+                        mensajeCantidad.textContent =
+                            `No podés agregar esa cantidad. El stock disponible es ${producto.stock}.`;
+
+                        return;
+
+                    }
+
+
+                    productoExistente.cantidad =
+                        nuevaCantidad;
+
+                } else {
+
+                    carrito.push({
+
+                        id: producto.id,
+                        nombre: producto.nombre,
+                        precio: producto.precio,
+                        imagen: producto.imagen,
+                        cantidad: cantidad
+
+                    });
+
+                }
+
+
+                localStorage.setItem(
+                    "carrito",
+                    JSON.stringify(carrito)
+                );
+
+
+                mensajeCantidad.classList.remove(
+                    "text-danger"
+                );
+
+                mensajeCantidad.classList.add(
+                    "text-success"
+                );
+
+                mensajeCantidad.textContent =
+                    "Producto agregado al carrito.";
+
+
+                let btnVerCarrito =
+                    document.querySelector(
+                        "#btnVerCarrito"
+                    );
+
+
+                if (!btnVerCarrito) {
+
+                    btnVerCarrito =
+                        document.createElement("a");
+
+                    btnVerCarrito.id =
+                        "btnVerCarrito";
+
+                    btnVerCarrito.href =
+                        "carrito.html";
+
+                    btnVerCarrito.textContent =
+                        "Ver carrito";
+
+                    btnVerCarrito.classList.add(
+                        "btn",
+                        "btn-outline-primary",
+                        "mt-2"
+                    );
+
+
+                    mensajeCantidad.insertAdjacentElement(
+                        "afterend",
+                        btnVerCarrito
+                    );
+
+                }
+
+            }
         );
 
-
-        mensajeCantidad.classList.remove("text-danger");
-        mensajeCantidad.classList.add("text-success");
-
-        mensajeCantidad.textContent =
-            "Producto agregado al carrito.";
+    }
 
 
-        let btnVerCarrito =
-            document.querySelector("#btnVerCarrito");
+    // Producto no encontrado
+    function mostrarProductoNoEncontrado() {
 
+        contenedor.innerHTML = `
+            <div class="alert alert-warning text-center">
 
-        if (!btnVerCarrito) {
+                <h2 class="h5">
+                    Producto no encontrado
+                </h2>
 
-            btnVerCarrito =
-                document.createElement("a");
+                <p class="mb-0">
+                    El producto que estás buscando no existe.
+                </p>
 
-            btnVerCarrito.id =
-                "btnVerCarrito";
+            </div>
 
-            btnVerCarrito.href =
-                "carrito.html";
+            <div class="text-center mt-4">
 
-            btnVerCarrito.textContent =
-                "Ver carrito";
+                <a
+                    href="catalogo.html"
+                    class="btn btn-outline-primary"
+                >
+                    Volver al catálogo
+                </a>
 
-            btnVerCarrito.classList.add(
-                "btn",
-                "btn-outline-primary",
-                "mt-2"
-            );
+            </div>
+        `;
 
-            mensajeCantidad.insertAdjacentElement(
-                "afterend",
-                btnVerCarrito
-            );
-
-        }
-
-    });
+    }
 
 });
