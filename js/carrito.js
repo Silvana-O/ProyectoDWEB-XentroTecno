@@ -1,8 +1,11 @@
-import { db } from "./firebase/config.js";
+import { auth, db } from "./firebase/config.js";
 
 import {
     collection,
-    getDocs
+    getDocs,
+    doc,
+    runTransaction,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 
@@ -17,6 +20,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const resumenCarrito =
         document.querySelector("#resumenCarrito");
 
+    const btnConfirmarCompra =
+        document.querySelector("#btnConfirmarCompra");
+
 
     let carrito = JSON.parse(
         localStorage.getItem("carrito")
@@ -26,7 +32,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     let productos = [];
 
 
-    // Cargar productos desde Firestore
+    // ==========================================
+    // CARGAR PRODUCTOS DESDE FIRESTORE
+    // ==========================================
+
     async function cargarProductos() {
 
         try {
@@ -75,7 +84,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    // Guardar carrito en LocalStorage
+    // ==========================================
+    // GUARDAR CARRITO EN LOCALSTORAGE
+    // ==========================================
+
     function guardarCarrito() {
 
         localStorage.setItem(
@@ -86,7 +98,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    // Mostrar carrito
+    // ==========================================
+    // MOSTRAR CARRITO
+    // ==========================================
+
     function mostrarCarrito() {
 
         contenedorCarrito.innerHTML = "";
@@ -98,7 +113,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             resumenCarrito.classList.add("d-none");
 
             return;
-
         }
 
 
@@ -236,7 +250,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    // Configurar botones
+    // ==========================================
+    // CONFIGURAR BOTONES DEL CARRITO
+    // ==========================================
+
     function configurarEventos() {
 
         const botonesAumentar =
@@ -249,7 +266,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.querySelectorAll(".btn-eliminar");
 
 
-        // Aumentar cantidad
+        // ======================================
+        // AUMENTAR CANTIDAD
+        // ======================================
+
         botonesAumentar.forEach(boton => {
 
             boton.addEventListener("click", () => {
@@ -295,7 +315,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
 
-        // Disminuir cantidad
+        // ======================================
+        // DISMINUIR CANTIDAD
+        // ======================================
+
         botonesDisminuir.forEach(boton => {
 
             boton.addEventListener("click", () => {
@@ -338,7 +361,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
 
-        // Eliminar producto
+        // ======================================
+        // ELIMINAR PRODUCTO
+        // ======================================
+
         botonesEliminar.forEach(boton => {
 
             boton.addEventListener("click", () => {
@@ -365,7 +391,276 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    // Cargar productos y mostrar carrito
+    // ==========================================
+    // CONFIRMAR COMPRA
+    // ==========================================
+
+    async function confirmarCompra() {
+
+        // Verificar sesión
+        const usuario = auth.currentUser;
+
+
+        if (!usuario) {
+
+            alert(
+                "Debés iniciar sesión para confirmar la compra."
+            );
+
+            window.location.href = "login.html";
+
+            return;
+        }
+
+
+        // Verificar que haya productos
+        if (carrito.length === 0) {
+
+            alert(
+                "No hay productos en el carrito."
+            );
+
+            return;
+        }
+
+
+        // Desactivar botón mientras se procesa
+        btnConfirmarCompra.disabled = true;
+
+        btnConfirmarCompra.textContent =
+            "Procesando compra...";
+
+
+        try {
+
+            // Crear referencia para el nuevo pedido
+            const pedidoRef =
+                doc(collection(db, "pedidos"));
+
+
+            // Ejecutar transacción
+            const resultado =
+                await runTransaction(
+                    db,
+                    async transaction => {
+
+                        const productosPedido = [];
+
+                        let total = 0;
+
+
+                        // Verificar nuevamente cada producto
+                        for (const item of carrito) {
+
+                            const productoRef =
+                                doc(db, "productos", item.id);
+
+
+                            const productoSnapshot =
+                                await transaction.get(
+                                    productoRef
+                                );
+
+
+                            // Verificar que exista
+                            if (!productoSnapshot.exists()) {
+
+                                throw new Error(
+                                    `El producto "${item.nombre}" ya no está disponible.`
+                                );
+
+                            }
+
+
+                            const producto =
+                                productoSnapshot.data();
+
+
+                            // Verificar cantidad
+                            if (
+                                !Number.isInteger(item.cantidad) ||
+                                item.cantidad < 1
+                            ) {
+
+                                throw new Error(
+                                    `La cantidad seleccionada para "${item.nombre}" no es válida.`
+                                );
+
+                            }
+
+
+                            // Verificar stock actualizado
+                            if (
+                                producto.stock < item.cantidad
+                            ) {
+
+                                throw new Error(
+                                    `No hay suficiente stock de "${producto.nombre}". Stock disponible: ${producto.stock}.`
+                                );
+
+                            }
+
+
+                            // Usar el precio actual de Firestore
+                            const precio =
+                                Number(producto.precio);
+
+
+                            const cantidad =
+                                Number(item.cantidad);
+
+
+                            const subtotal =
+                                precio * cantidad;
+
+
+                            total += subtotal;
+
+
+                            // Guardar información del producto
+                            // dentro del pedido
+                            productosPedido.push({
+
+                                productoId: item.id,
+
+                                nombre: producto.nombre,
+
+                                precio: precio,
+
+                                cantidad: cantidad,
+
+                                subtotal: subtotal
+
+                            });
+
+
+                            // Actualizar stock
+                            const nuevoStock =
+                                producto.stock - cantidad;
+
+
+                            transaction.update(
+                                productoRef,
+                                {
+                                    stock: nuevoStock,
+                                    disponibilidad: nuevoStock > 0
+                                }
+                            );
+
+                        }
+
+
+                        // Crear pedido
+                        transaction.set(
+                            pedidoRef,
+                            {
+                                usuarioId: usuario.uid,
+
+                                productos: productosPedido,
+
+                                total: total,
+
+                                fecha: serverTimestamp(),
+
+                                estado: "confirmado"
+                            }
+                        );
+
+
+                        return {
+                            total: total
+                        };
+
+                    }
+                );
+
+
+            // ==================================
+            // COMPRA REALIZADA CORRECTAMENTE
+            // ==================================
+
+            carrito = [];
+
+            localStorage.removeItem("carrito");
+
+
+            // Ocultar los mensajes normales
+            mensajeCarritoVacio.classList.add("d-none");
+            resumenCarrito.classList.add("d-none");
+
+
+            // Mostrar confirmación en el lugar del carrito
+            contenedorCarrito.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-success text-center">
+
+                        <h2 class="h5 mb-2">
+                            Compra realizada correctamente
+                        </h2>
+
+                        <p class="mb-2">
+                            Tu pedido fue registrado correctamente.
+                        </p>
+
+                        <p class="mb-0">
+                            Total:
+                            <strong>
+                                USD ${resultado.total}
+                            </strong>
+                        </p>
+
+                    </div>
+                </div>
+            `;
+
+
+            console.log(
+                "Pedido registrado correctamente:",
+                pedidoRef.id
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Error al confirmar la compra:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "No se pudo completar la compra. Intentá nuevamente."
+            );
+
+
+        } finally {
+
+            // Volver a habilitar el botón
+            btnConfirmarCompra.disabled = false;
+
+            btnConfirmarCompra.textContent =
+                "Confirmar compra";
+
+        }
+
+    }
+
+
+    // ==========================================
+    // EVENTO CONFIRMAR COMPRA
+    // ==========================================
+
+    btnConfirmarCompra?.addEventListener(
+        "click",
+        confirmarCompra
+    );
+
+
+    // ==========================================
+    // CARGAR PRODUCTOS Y MOSTRAR CARRITO
+    // ==========================================
+
     await cargarProductos();
 
 });
