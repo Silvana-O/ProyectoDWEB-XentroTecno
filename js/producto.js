@@ -1,9 +1,19 @@
-import { db } from "./firebase/config.js";
+import { auth, db } from "./firebase/config.js";
 
 import {
     doc,
-    getDoc
+    getDoc,
+    collection,
+    addDoc,
+    getDocs,
+    query,
+    where,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -18,7 +28,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         parametros.get("id");
 
 
-    // Verificar que exista un ID en la URL
+    // ==========================================
+    // VERIFICAR ID DEL PRODUCTO
+    // ==========================================
+
     if (!idProducto) {
 
         mostrarProductoNoEncontrado();
@@ -30,7 +43,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     let producto;
 
 
-    // Obtener producto desde Firestore
+    // ==========================================
+    // OBTENER PRODUCTO DESDE FIRESTORE
+    // ==========================================
+
     try {
 
         const referenciaProducto =
@@ -70,20 +86,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         contenedor.innerHTML = `
             <div class="alert alert-danger text-center">
-                <h2 class="h5">No se pudo cargar el producto</h2>
+
+                <h2 class="h5">
+                    No se pudo cargar el producto
+                </h2>
+
                 <p class="mb-0">
                     Ocurrió un error al obtener la información.
                     Intentá nuevamente más tarde.
                 </p>
+
             </div>
 
             <div class="text-center mt-4">
+
                 <a
                     href="catalogo.html"
                     class="btn btn-outline-primary"
                 >
                     Volver al catálogo
                 </a>
+
             </div>
         `;
 
@@ -92,7 +115,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    // Mostrar producto
+    // ==========================================
+    // MOSTRAR PRODUCTO
+    // ==========================================
+
     mostrarProducto(producto);
 
 
@@ -155,17 +181,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                             <div class="col-12 col-sm-6">
 
                                 <p class="mb-0">
+
                                     <strong>Marca</strong><br>
+
                                     ${producto.marca}
+
                                 </p>
 
                             </div>
 
+
                             <div class="col-12 col-sm-6">
 
                                 <p class="mb-0">
+
                                     <strong>Modelo</strong><br>
+
                                     ${producto.modelo}
+
                                 </p>
 
                             </div>
@@ -255,15 +288,136 @@ document.addEventListener("DOMContentLoaded", async () => {
                     ${caracteristicas
                         .map(caracteristica => `
                             <div class="col">
+
                                 <div class="p-2">
-                                    <span class="me-2">•</span>
+
+                                    <span class="me-2">
+                                        •
+                                    </span>
+
                                     ${caracteristica}
+
                                 </div>
+
                             </div>
                         `)
                         .join("")}
 
                 </div>
+
+            </div>
+
+
+            <!-- RESEÑAS -->
+
+            <div class="border rounded p-4 mt-5">
+
+                <h3 class="h5 mb-4">
+                    Reseñas de clientes
+                </h3>
+
+                <div id="contenedorResenas">
+
+                    <div class="alert alert-info text-center">
+                        Cargando reseñas...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FORMULARIO DE RESEÑA -->
+
+            <div class="border rounded p-4 mt-4">
+
+                <h3 class="h5 mb-4">
+                    Dejá tu reseña
+                </h3>
+
+                <div id="mensajeResena"></div>
+
+                <form id="formResena">
+
+                    <div class="mb-3">
+
+                        <label
+                            for="puntuacionResena"
+                            class="form-label fw-semibold"
+                        >
+                            Puntuación
+                        </label>
+
+                        <select
+                            id="puntuacionResena"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                Seleccioná una puntuación
+                            </option>
+
+                            <option value="5">
+                                5 - Excelente
+                            </option>
+
+                            <option value="4">
+                                4 - Muy bueno
+                            </option>
+
+                            <option value="3">
+                                3 - Bueno
+                            </option>
+
+                            <option value="2">
+                                2 - Regular
+                            </option>
+
+                            <option value="1">
+                                1 - Malo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label
+                            for="comentarioResena"
+                            class="form-label fw-semibold"
+                        >
+                            Comentario
+                        </label>
+
+                        <textarea
+                            id="comentarioResena"
+                            class="form-control"
+                            rows="4"
+                            minlength="5"
+                            maxlength="500"
+                            placeholder="Escribí tu opinión sobre el producto..."
+                            required
+                        ></textarea>
+
+                        <div class="form-text">
+                            Entre 5 y 500 caracteres.
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        id="btnPublicarResena"
+                        class="btn btn-primary"
+                    >
+                        Publicar reseña
+                    </button>
+
+                </form>
 
             </div>
 
@@ -284,6 +438,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         `;
 
 
+        // ==========================================
+        // ELEMENTOS DEL CARRITO
+        // ==========================================
+
         const cantidadInput =
             document.querySelector("#cantidadProducto");
 
@@ -294,7 +452,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.querySelector("#btnAgregarCarrito");
 
 
-        // Validar cantidad
+        // ==========================================
+        // VALIDAR CANTIDAD
+        // ==========================================
+
         cantidadInput.addEventListener("input", () => {
 
             const cantidad =
@@ -334,7 +495,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
 
-        // Agregar al carrito
+        // ==========================================
+        // AGREGAR AL CARRITO
+        // ==========================================
+
         btnAgregarCarrito.addEventListener(
             "click",
             () => {
@@ -475,10 +639,582 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         );
 
+
+        // ==========================================
+        // CONFIGURAR RESEÑAS
+        // ==========================================
+
+        configurarResenas(producto.id);
+
     }
 
 
-    // Producto no encontrado
+    // ==========================================
+    // CONFIGURAR RESEÑAS
+    // ==========================================
+
+    function configurarResenas(idProducto) {
+
+        cargarResenas(idProducto);
+
+        const formulario =
+            document.querySelector("#formResena");
+
+        const mensaje =
+            document.querySelector("#mensajeResena");
+
+
+        onAuthStateChanged(auth, async (usuario) => {
+
+            if (!usuario) {
+
+                formulario.innerHTML = `
+                    <div class="alert alert-info mb-0">
+                        Iniciá sesión para dejar una reseña.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            // Verificar si el usuario compró el producto
+            const comproProducto =
+                await verificarCompraProducto(
+                    usuario.uid,
+                    idProducto
+                );
+
+
+            if (!comproProducto) {
+
+                formulario.innerHTML = `
+                    <div class="alert alert-secondary mb-0">
+                        Solo podés dejar una reseña de productos que hayas comprado.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            // Verificar si ya publicó una reseña
+            const yaReseno =
+                await verificarResenaExistente(
+                    usuario.uid,
+                    idProducto
+                );
+
+
+            if (yaReseno) {
+
+                formulario.innerHTML = `
+                    <div class="alert alert-success mb-0">
+                        Ya publicaste una reseña para este producto.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            formulario.addEventListener(
+                "submit",
+                async (evento) => {
+
+                    evento.preventDefault();
+
+
+                    const usuarioActual =
+                        auth.currentUser;
+
+
+                    if (!usuarioActual) {
+
+                        mensaje.innerHTML = `
+                            <div class="alert alert-warning">
+                                Debés iniciar sesión para publicar una reseña.
+                            </div>
+                        `;
+
+                        return;
+                    }
+
+
+                    const puntuacion =
+                        Number(
+                            document.querySelector(
+                                "#puntuacionResena"
+                            ).value
+                        );
+
+
+                    const comentario =
+                        document.querySelector(
+                            "#comentarioResena"
+                        ).value.trim();
+
+
+                    // ==========================================
+                    // VALIDAR PUNTUACIÓN
+                    // ==========================================
+
+                    if (
+                        !Number.isInteger(puntuacion) ||
+                        puntuacion < 1 ||
+                        puntuacion > 5
+                    ) {
+
+                        mensaje.innerHTML = `
+                            <div class="alert alert-danger">
+                                Seleccioná una puntuación entre 1 y 5.
+                            </div>
+                        `;
+
+                        return;
+                    }
+
+
+                    // ==========================================
+                    // VALIDAR COMENTARIO
+                    // ==========================================
+
+                    if (
+                        comentario.length < 5 ||
+                        comentario.length > 500
+                    ) {
+
+                        mensaje.innerHTML = `
+                            <div class="alert alert-danger">
+                                El comentario debe tener entre 5 y 500 caracteres.
+                            </div>
+                        `;
+
+                        return;
+                    }
+
+
+                    const boton =
+                        document.querySelector(
+                            "#btnPublicarResena"
+                        );
+
+
+                    boton.disabled = true;
+                    boton.textContent = "Publicando...";
+
+
+                    try {
+
+                        // ==========================================
+                        // OBTENER DATOS DEL USUARIO
+                        // ==========================================
+
+                        let nombreUsuario =
+                            usuarioActual.email;
+
+
+                        try {
+
+                            const referenciaUsuario =
+                                doc(
+                                    db,
+                                    "usuarios",
+                                    usuarioActual.uid
+                                );
+
+
+                            const documentoUsuario =
+                                await getDoc(
+                                    referenciaUsuario
+                                );
+
+
+                            if (documentoUsuario.exists()) {
+
+                                const datosUsuario =
+                                    documentoUsuario.data();
+
+
+                                const nombre =
+                                    datosUsuario.nombre || "";
+
+
+                                const apellido =
+                                    datosUsuario.apellido || "";
+
+
+                                const nombreCompleto =
+                                    `${nombre} ${apellido}`.trim();
+
+
+                                if (nombreCompleto) {
+
+                                    nombreUsuario =
+                                        nombreCompleto;
+
+                                }
+
+                            }
+
+                        } catch (errorUsuario) {
+
+                            console.warn(
+                                "No se pudieron obtener los datos del perfil:",
+                                errorUsuario
+                            );
+
+                        }
+
+
+                        // ==========================================
+                        // GUARDAR RESEÑA
+                        // ==========================================
+
+                        await addDoc(
+                            collection(db, "resenas"),
+                            {
+                                productoId: idProducto,
+                                usuarioId: usuarioActual.uid,
+                                nombreUsuario: nombreUsuario,
+                                puntuacion: puntuacion,
+                                comentario: comentario,
+                                fecha: serverTimestamp()
+                            }
+                        );
+
+
+                        formulario.reset();
+
+
+                        mensaje.innerHTML = `
+                            <div class="alert alert-success">
+                                Tu reseña fue publicada correctamente.
+                            </div>
+                        `;
+
+
+                        // Ocultar el formulario después de publicar
+                        formulario.innerHTML = `
+                            <div class="alert alert-success mb-0">
+                                Tu reseña fue publicada correctamente.
+                            </div>
+                        `;
+
+
+                        await cargarResenas(idProducto);
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Error al publicar la reseña:",
+                            error
+                        );
+
+
+                        mensaje.innerHTML = `
+                            <div class="alert alert-danger">
+                                No se pudo publicar la reseña.
+                                Intentá nuevamente.
+                            </div>
+                        `;
+
+
+                        boton.disabled = false;
+                        boton.textContent =
+                            "Publicar reseña";
+
+                    }
+
+                }
+            );
+
+        });
+
+    }
+
+    // ==========================================
+    // VERIFICAR SI EL USUARIO COMPRÓ EL PRODUCTO
+    // ==========================================
+
+    async function verificarCompraProducto(
+        usuarioId,
+        idProducto
+    ) {
+
+        try {
+
+            const referenciaPedidos =
+                collection(db, "pedidos");
+
+
+            const consulta =
+                query(
+                    referenciaPedidos,
+                    where(
+                        "usuarioId",
+                        "==",
+                        usuarioId
+                    )
+                );
+
+
+            const snapshot =
+                await getDocs(consulta);
+
+
+            for (const documento of snapshot.docs) {
+
+                const pedido =
+                    documento.data();
+
+
+                const productosPedido =
+                    Array.isArray(pedido.productos)
+                        ? pedido.productos
+                        : [];
+
+
+                const compro =
+                    productosPedido.some(
+                        producto =>
+                            producto.productoId === idProducto
+                    );
+
+
+                if (compro) {
+
+                    return true;
+
+                }
+
+            }
+
+
+            return false;
+
+
+        } catch (error) {
+
+            console.error(
+                "Error al verificar la compra del producto:",
+                error
+            );
+
+
+            return false;
+
+        }
+
+    }
+
+
+    // ==========================================
+    // VERIFICAR SI YA PUBLICÓ UNA RESEÑA
+    // ==========================================
+
+    async function verificarResenaExistente(
+        usuarioId,
+        idProducto
+    ) {
+
+        try {
+
+            const referenciaResenas =
+                collection(db, "resenas");
+
+
+            const consulta =
+                query(
+                    referenciaResenas,
+                    where(
+                        "usuarioId",
+                        "==",
+                        usuarioId
+                    ),
+                    where(
+                        "productoId",
+                        "==",
+                        idProducto
+                    )
+                );
+
+
+            const snapshot =
+                await getDocs(consulta);
+
+
+            return !snapshot.empty;
+
+
+        } catch (error) {
+
+            console.error(
+                "Error al verificar la reseña existente:",
+                error
+            );
+
+
+            return false;
+
+        }
+
+    }
+
+
+    // ==========================================
+    // CARGAR RESEÑAS
+    // ==========================================
+
+    async function cargarResenas(idProducto) {
+
+        const contenedorResenas =
+            document.querySelector(
+                "#contenedorResenas"
+            );
+
+
+        try {
+
+            const referenciaResenas =
+                collection(db, "resenas");
+
+
+            const consulta =
+                query(
+                    referenciaResenas,
+                    where(
+                        "productoId",
+                        "==",
+                        idProducto
+                    )
+                );
+
+
+            const snapshot =
+                await getDocs(consulta);
+
+
+            if (snapshot.empty) {
+
+                contenedorResenas.innerHTML = `
+                    <div class="alert alert-light border text-center">
+                        Este producto todavía no tiene reseñas.
+                    </div>
+                `;
+
+                return;
+
+            }
+
+
+            const resenas =
+                snapshot.docs.map((documento) => ({
+                    id: documento.id,
+                    ...documento.data()
+                }));
+
+
+            // Ordenar por fecha, de más reciente a más antigua
+            resenas.sort((a, b) => {
+
+                const fechaA =
+                    a.fecha?.toDate
+                        ? a.fecha.toDate()
+                        : new Date(0);
+
+                const fechaB =
+                    b.fecha?.toDate
+                        ? b.fecha.toDate()
+                        : new Date(0);
+
+                return fechaB - fechaA;
+
+            });
+
+
+            contenedorResenas.innerHTML =
+                resenas
+                    .map((resena) => {
+
+                        const estrellas =
+                            "★".repeat(
+                                Number(resena.puntuacion)
+                            ) +
+                            "☆".repeat(
+                                5 - Number(resena.puntuacion)
+                            );
+
+
+                        const fecha =
+                            resena.fecha?.toDate
+                                ? resena.fecha
+                                    .toDate()
+                                    .toLocaleDateString(
+                                        "es-UY"
+                                    )
+                                : "Fecha no disponible";
+
+
+                        return `
+                            <div class="border rounded p-3 mb-3">
+
+                                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+
+                                    <div>
+
+                                        <strong>
+                                            ${resena.nombreUsuario || "Usuario"}
+                                        </strong>
+
+                                        <div class="text-warning">
+                                            ${estrellas}
+                                        </div>
+
+                                    </div>
+
+                                    <small class="text-muted">
+                                        ${fecha}
+                                    </small>
+
+                                </div>
+
+
+                                <p class="mb-0 mt-3">
+                                    ${resena.comentario}
+                                </p>
+
+                            </div>
+                        `;
+
+                    })
+                    .join("");
+
+
+        } catch (error) {
+
+            console.error(
+                "Error al cargar las reseñas:",
+                error
+            );
+
+
+            contenedorResenas.innerHTML = `
+                <div class="alert alert-danger">
+                    No se pudieron cargar las reseñas.
+                </div>
+            `;
+
+        }
+
+    }
+
+
+    // ==========================================
+    // PRODUCTO NO ENCONTRADO
+    // ==========================================
+
     function mostrarProductoNoEncontrado() {
 
         contenedor.innerHTML = `
