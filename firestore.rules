@@ -1,0 +1,57 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Usuarios
+    match /usuarios/{userId} {
+      allow read, create, update: if request.auth != null
+        && request.auth.uid == userId;
+    }
+
+
+    // Productos
+    match /productos/{productoId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+
+    // Pedidos
+    match /pedidos/{pedidoId} {
+
+      // El usuario autenticado puede crear
+      // un pedido asociado a su propio UID
+      allow create: if request.auth != null
+        && request.resource.data.usuarioId == request.auth.uid;
+
+      // El usuario solamente puede consultar
+      // sus propios pedidos
+      allow read: if request.auth != null
+        && resource.data.usuarioId == request.auth.uid;
+
+      // No permitimos modificar ni eliminar pedidos
+      allow update, delete: if false;
+
+    }
+
+
+    // Contador de pedidos
+    match /contadores/{contadorId} {
+      allow read, write: if request.auth != null;
+    }
+
+
+    // Reseñas
+    match /resenas/{resenaId} {
+      allow read: if true;
+
+      allow create: if request.auth != null
+        && request.resource.data.usuarioId == request.auth.uid;
+
+      allow update, delete: if request.auth != null
+        && resource.data.usuarioId == request.auth.uid;
+    }
+
+  }
+}
