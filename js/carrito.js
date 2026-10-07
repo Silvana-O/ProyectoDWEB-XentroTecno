@@ -8,95 +8,50 @@ import {
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const contenedorCarrito =
-        document.querySelector("#contenedorCarrito");
+    const contenedorCarrito = document.querySelector("#contenedorCarrito");
+    const mensajeCarritoVacio = document.querySelector("#mensajeCarritoVacio");
+    const resumenCarrito = document.querySelector("#resumenCarrito");
+    const btnConfirmarCompra = document.querySelector("#btnConfirmarCompra");
 
-    const mensajeCarritoVacio =
-        document.querySelector("#mensajeCarritoVacio");
-
-    const resumenCarrito =
-        document.querySelector("#resumenCarrito");
-
-    const btnConfirmarCompra =
-        document.querySelector("#btnConfirmarCompra");
-
-
-    let carrito = JSON.parse(
-        localStorage.getItem("carrito")
-    ) || [];
-
-
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     let productos = [];
-
 
     // ==========================================
     // CARGAR PRODUCTOS DESDE FIRESTORE
     // ==========================================
 
     async function cargarProductos() {
-
         try {
+            const referenciaProductos = collection(db, "productos");
+            const snapshot = await getDocs(referenciaProductos);
 
-            const referenciaProductos =
-                collection(db, "productos");
-
-            const snapshot =
-                await getDocs(referenciaProductos);
-
-
-            productos = snapshot.docs.map(documento => ({
+            productos = snapshot.docs.map((documento) => ({
                 id: documento.id,
                 ...documento.data()
             }));
 
-
-            console.log(
-                "Productos cargados desde Firestore:",
-                productos
-            );
-
-
             mostrarCarrito();
 
-
         } catch (error) {
-
-            console.error(
-                "Error al cargar los productos desde Firestore:",
-                error
-            );
-
+            console.error("Error al cargar productos:", error);
 
             contenedorCarrito.innerHTML = `
-                <div class="col-12">
-                    <div class="alert alert-danger text-center">
-                        No se pudieron cargar los productos del carrito.
-                        Intentá nuevamente más tarde.
-                    </div>
+                <div class="alert alert-danger text-center">
+                    No se pudieron cargar los productos.
                 </div>
             `;
-
         }
-
     }
 
-
     // ==========================================
-    // GUARDAR CARRITO EN LOCALSTORAGE
+    // GUARDAR CARRITO
     // ==========================================
 
     function guardarCarrito() {
-
-        localStorage.setItem(
-            "carrito",
-            JSON.stringify(carrito)
-        );
-
+        localStorage.setItem("carrito", JSON.stringify(carrito));
     }
-
 
     // ==========================================
     // MOSTRAR CARRITO
@@ -106,7 +61,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         contenedorCarrito.innerHTML = "";
 
-
         if (carrito.length === 0) {
 
             mensajeCarritoVacio.classList.remove("d-none");
@@ -115,281 +69,210 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-
         mensajeCarritoVacio.classList.add("d-none");
         resumenCarrito.classList.remove("d-none");
 
-
         const total = carrito.reduce(
             (acumulado, item) =>
-                acumulado + item.precio * item.cantidad,
+                acumulado + Number(item.precio) * Number(item.cantidad),
             0
         );
 
-
         document.querySelector("#totalCarrito").textContent =
-            `USD ${total}`;
+            `USD ${total.toFixed(2)}`;
 
+        carrito.forEach((item) => {
 
-        carrito.forEach(item => {
-
-            const producto =
-                productos.find(
-                    producto => producto.id === item.id
-                );
-
+            const producto = productos.find(
+                (producto) => producto.id === item.id
+            );
 
             if (!producto) {
                 return;
             }
 
+            const subtotal =
+                Number(item.precio) * Number(item.cantidad);
 
-            const tarjeta =
-                document.createElement("div");
+            const tarjeta = document.createElement("div");
 
-
-            tarjeta.classList.add("col-12");
-
+            tarjeta.className = "card border-0 shadow-sm";
 
             tarjeta.innerHTML = `
-                <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="row align-items-center g-3">
 
-                    <div class="card-body">
+                        <div class="col-12 col-md-2 text-center">
+                            <img
+                                src="${producto.imagen}"
+                                alt="${producto.nombre}"
+                                class="img-fluid rounded"
+                                style="max-height: 120px; object-fit: contain;"
+                            >
+                        </div>
 
-                        <div class="row align-items-center g-3">
+                        <div class="col-12 col-md-4">
+                            <h3 class="h5 fw-bold mb-1">
+                                ${producto.nombre}
+                            </h3>
 
-                            <div class="col-12 col-md-2 text-center">
+                            <p class="text-muted mb-1">
+                                ${producto.categoria}
+                            </p>
 
-                                <img
-                                    src="${item.imagen}"
-                                    alt="${item.nombre}"
-                                    class="img-fluid rounded"
-                                    style="max-height: 120px;"
+                            <p class="mb-0">
+                                Precio unitario:
+                                <strong>USD ${Number(producto.precio).toFixed(2)}</strong>
+                            </p>
+                        </div>
+
+                        <div class="col-12 col-md-3">
+
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+
+                                <button
+                                    class="btn btn-outline-secondary btn-sm btn-disminuir"
+                                    data-id="${item.id}"
                                 >
+                                    −
+                                </button>
+
+                                <span class="fw-bold">
+                                    ${item.cantidad}
+                                </span>
+
+                                <button
+                                    class="btn btn-outline-secondary btn-sm btn-aumentar"
+                                    data-id="${item.id}"
+                                    ${item.cantidad >= producto.stock ? "disabled" : ""}
+                                >
+                                    +
+                                </button>
 
                             </div>
 
+                            <small class="text-muted d-block text-center mt-2">
+                                Stock disponible: ${producto.stock}
+                            </small>
 
-                            <div class="col-12 col-md-3">
+                        </div>
 
-                                <h2 class="h5 mb-1">
-                                    ${item.nombre}
-                                </h2>
+                        <div class="col-12 col-md-2 text-center">
+                            <p class="mb-0 fw-bold">
+                                USD ${subtotal.toFixed(2)}
+                            </p>
+                        </div>
 
-                                <p class="mb-0">
-                                    Precio: USD ${item.precio}
-                                </p>
+                        <div class="col-12 col-md-1 text-center">
 
-                            </div>
-
-
-                            <div class="col-12 col-md-4">
-
-                                <div class="d-flex align-items-center gap-2">
-
-                                    <button
-                                        type="button"
-                                        class="btn btn-outline-primary btn-disminuir"
-                                        data-id="${item.id}"
-                                    >
-                                        −
-                                    </button>
-
-                                    <span class="fw-semibold">
-                                        ${item.cantidad}
-                                    </span>
-
-                                    <button
-                                        type="button"
-                                        class="btn btn-outline-primary btn-aumentar"
-                                        data-id="${item.id}"
-                                    >
-                                        +
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="btn btn-outline-danger btn-eliminar"
-                                        data-id="${item.id}"
-                                    >
-                                        Eliminar
-                                    </button>
-
-                                </div>
-
-                                <small class="text-muted">
-                                    Stock disponible: ${producto.stock}
-                                </small>
-
-                            </div>
-
-
-                            <div class="col-12 col-md-3 text-md-end">
-
-                                <p class="fw-bold mb-0">
-                                    USD ${item.precio * item.cantidad}
-                                </p>
-
-                            </div>
+                            <button
+                                class="btn btn-outline-danger btn-sm btn-eliminar"
+                                data-id="${item.id}"
+                                title="Eliminar producto"
+                            >
+                                Eliminar
+                            </button>
 
                         </div>
 
                     </div>
-
                 </div>
             `;
 
-
             contenedorCarrito.appendChild(tarjeta);
-
         });
 
-
         configurarEventos();
-
     }
 
-
     // ==========================================
-    // CONFIGURAR BOTONES DEL CARRITO
+    // EVENTOS DEL CARRITO
     // ==========================================
 
     function configurarEventos() {
 
-        const botonesAumentar =
-            document.querySelectorAll(".btn-aumentar");
-
-        const botonesDisminuir =
-            document.querySelectorAll(".btn-disminuir");
-
-        const botonesEliminar =
-            document.querySelectorAll(".btn-eliminar");
-
-
-        // ======================================
         // AUMENTAR CANTIDAD
-        // ======================================
-
-        botonesAumentar.forEach(boton => {
+        document.querySelectorAll(".btn-aumentar").forEach((boton) => {
 
             boton.addEventListener("click", () => {
 
-                const id =
-                    boton.dataset.id;
+                const id = boton.dataset.id;
 
+                const item = carrito.find(
+                    (producto) => producto.id === id
+                );
 
-                const item =
-                    carrito.find(
-                        producto => producto.id === id
-                    );
+                const producto = productos.find(
+                    (producto) => producto.id === id
+                );
 
-
-                const producto =
-                    productos.find(
-                        producto => producto.id === id
-                    );
-
-
-                if (item && producto) {
-
-                    if (item.cantidad < producto.stock) {
-
-                        item.cantidad++;
-
-                        guardarCarrito();
-
-                        mostrarCarrito();
-
-                    } else {
-
-                        alert(
-                            "Ya alcanzaste el stock máximo disponible para este producto."
-                        );
-
-                    }
-
+                if (!item || !producto) {
+                    return;
                 }
 
-            });
+                if (item.cantidad < producto.stock) {
 
-        });
-
-
-        // ======================================
-        // DISMINUIR CANTIDAD
-        // ======================================
-
-        botonesDisminuir.forEach(boton => {
-
-            boton.addEventListener("click", () => {
-
-                const id =
-                    boton.dataset.id;
-
-
-                const item =
-                    carrito.find(
-                        producto => producto.id === id
-                    );
-
-
-                if (item) {
-
-                    if (item.cantidad > 1) {
-
-                        item.cantidad--;
-
-                    } else {
-
-                        carrito =
-                            carrito.filter(
-                                producto =>
-                                    producto.id !== id
-                            );
-
-                    }
-
+                    item.cantidad++;
 
                     guardarCarrito();
-
                     mostrarCarrito();
 
+                } else {
+
+                    alert(
+                        `No hay más unidades disponibles de ${producto.nombre}.`
+                    );
                 }
-
             });
-
         });
 
-
-        // ======================================
-        // ELIMINAR PRODUCTO
-        // ======================================
-
-        botonesEliminar.forEach(boton => {
+        // DISMINUIR CANTIDAD
+        document.querySelectorAll(".btn-disminuir").forEach((boton) => {
 
             boton.addEventListener("click", () => {
 
-                const id =
-                    boton.dataset.id;
+                const id = boton.dataset.id;
 
+                const item = carrito.find(
+                    (producto) => producto.id === id
+                );
 
-                carrito =
-                    carrito.filter(
-                        producto =>
-                            producto.id !== id
+                if (!item) {
+                    return;
+                }
+
+                if (item.cantidad > 1) {
+
+                    item.cantidad--;
+
+                } else {
+
+                    carrito = carrito.filter(
+                        (producto) => producto.id !== id
                     );
-
+                }
 
                 guardarCarrito();
-
                 mostrarCarrito();
-
             });
-
         });
 
-    }
+        // ELIMINAR PRODUCTO
+        document.querySelectorAll(".btn-eliminar").forEach((boton) => {
 
+            boton.addEventListener("click", () => {
+
+                const id = boton.dataset.id;
+
+                carrito = carrito.filter(
+                    (producto) => producto.id !== id
+                );
+
+                guardarCarrito();
+                mostrarCarrito();
+            });
+        });
+    }
 
     // ==========================================
     // CONFIRMAR COMPRA
@@ -397,228 +280,251 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function confirmarCompra() {
 
-        // Verificar sesión
         const usuario = auth.currentUser;
-
 
         if (!usuario) {
 
-            alert(
-                "Debés iniciar sesión para confirmar la compra."
-            );
+            alert("Debes iniciar sesión para confirmar la compra.");
 
             window.location.href = "login.html";
 
             return;
         }
 
-
-        // Verificar que haya productos
         if (carrito.length === 0) {
 
-            alert(
-                "No hay productos en el carrito."
-            );
+            alert("El carrito está vacío.");
 
             return;
         }
 
-
-        // Desactivar botón mientras se procesa
         btnConfirmarCompra.disabled = true;
-
-        btnConfirmarCompra.textContent =
-            "Procesando compra...";
-
+        btnConfirmarCompra.textContent = "Procesando compra...";
 
         try {
 
-            // Crear referencia para el nuevo pedido
-            const pedidoRef =
-                doc(collection(db, "pedidos"));
+            const pedidoRef = doc(collection(db, "pedidos"));
 
+            const resultado = await runTransaction(
+                db,
+                async (transaction) => {
 
-            // Ejecutar transacción
-            const resultado =
-                await runTransaction(
-                    db,
-                    async transaction => {
+                    // ==========================================
+                    // OBTENER CONTADOR DE PEDIDOS
+                    // ==========================================
 
-                        const productosPedido = [];
+                    const contadorRef = doc(
+                        db,
+                        "contadores",
+                        "pedidos"
+                    );
 
-                        let total = 0;
+                    const contadorSnapshot =
+                        await transaction.get(contadorRef);
 
+                    const ultimoNumero =
+                        contadorSnapshot.exists()
+                            ? Number(
+                                contadorSnapshot.data().ultimoNumero || 0
+                            )
+                            : 0;
 
-                        // Verificar nuevamente cada producto
-                        for (const item of carrito) {
+                    const siguienteNumero =
+                        ultimoNumero + 1;
 
-                            const productoRef =
-                                doc(db, "productos", item.id);
+                    // ==========================================
+                    // LEER TODOS LOS PRODUCTOS
+                    // ==========================================
 
+                    const productosSnapshots = [];
 
-                            const productoSnapshot =
-                                await transaction.get(
-                                    productoRef
-                                );
+                    for (const item of carrito) {
 
+                        const productoRef = doc(
+                            db,
+                            "productos",
+                            item.id
+                        );
 
-                            // Verificar que exista
-                            if (!productoSnapshot.exists()) {
+                        const productoSnapshot =
+                            await transaction.get(productoRef);
 
-                                throw new Error(
-                                    `El producto "${item.nombre}" ya no está disponible.`
-                                );
+                        productosSnapshots.push({
+                            item,
+                            productoRef,
+                            productoSnapshot
+                        });
+                    }
 
-                            }
+                    // ==========================================
+                    // VALIDAR PRODUCTOS Y CALCULAR TOTAL
+                    // ==========================================
 
+                    const productosPedido = [];
 
-                            const producto =
-                                productoSnapshot.data();
+                    let total = 0;
 
+                    for (const elemento of productosSnapshots) {
 
-                            // Verificar cantidad
-                            if (
-                                !Number.isInteger(item.cantidad) ||
-                                item.cantidad < 1
-                            ) {
+                        const {
+                            item,
+                            productoSnapshot
+                        } = elemento;
 
-                                throw new Error(
-                                    `La cantidad seleccionada para "${item.nombre}" no es válida.`
-                                );
+                        if (!productoSnapshot.exists()) {
 
-                            }
-
-
-                            // Verificar stock actualizado
-                            if (
-                                producto.stock < item.cantidad
-                            ) {
-
-                                throw new Error(
-                                    `No hay suficiente stock de "${producto.nombre}". Stock disponible: ${producto.stock}.`
-                                );
-
-                            }
-
-
-                            // Usar el precio actual de Firestore
-                            const precio =
-                                Number(producto.precio);
-
-
-                            const cantidad =
-                                Number(item.cantidad);
-
-
-                            const subtotal =
-                                precio * cantidad;
-
-
-                            total += subtotal;
-
-
-                            // Guardar información del producto
-                            // dentro del pedido
-                            productosPedido.push({
-
-                                productoId: item.id,
-
-                                nombre: producto.nombre,
-
-                                precio: precio,
-
-                                cantidad: cantidad,
-
-                                subtotal: subtotal
-
-                            });
-
-
-                            // Actualizar stock
-                            const nuevoStock =
-                                producto.stock - cantidad;
-
-
-                            transaction.update(
-                                productoRef,
-                                {
-                                    stock: nuevoStock,
-                                    disponibilidad: nuevoStock > 0
-                                }
+                            throw new Error(
+                                `El producto ${item.id} ya no existe.`
                             );
-
                         }
 
+                        const producto =
+                            productoSnapshot.data();
 
-                        // Crear pedido
-                        transaction.set(
-                            pedidoRef,
+                        const cantidad =
+                            Number(item.cantidad);
+
+                        const stock =
+                            Number(producto.stock);
+
+                        const precio =
+                            Number(producto.precio);
+
+                        if (
+                            !Number.isInteger(cantidad) ||
+                            cantidad <= 0
+                        ) {
+
+                            throw new Error(
+                                `Cantidad inválida para ${producto.nombre}.`
+                            );
+                        }
+
+                        if (stock < cantidad) {
+
+                            throw new Error(
+                                `No hay suficiente stock de ${producto.nombre}. Stock disponible: ${stock}.`
+                            );
+                        }
+
+                        const subtotal =
+                            precio * cantidad;
+
+                        total += subtotal;
+
+                        productosPedido.push({
+                            productoId: item.id,
+                            nombre: producto.nombre,
+                            precio: precio,
+                            cantidad: cantidad,
+                            subtotal: subtotal
+                        });
+                    }
+
+                    // ==========================================
+                    // ACTUALIZAR CONTADOR
+                    // ==========================================
+
+                    if (contadorSnapshot.exists()) {
+
+                        transaction.update(
+                            contadorRef,
                             {
-                                usuarioId: usuario.uid,
-
-                                productos: productosPedido,
-
-                                total: total,
-
-                                fecha: serverTimestamp(),
-
-                                estado: "confirmado"
+                                ultimoNumero: siguienteNumero
                             }
                         );
 
+                    } else {
 
-                        return {
-                            total: total
-                        };
-
+                        transaction.set(
+                            contadorRef,
+                            {
+                                ultimoNumero: siguienteNumero
+                            }
+                        );
                     }
-                );
 
+                    // ==========================================
+                    // ACTUALIZAR STOCK
+                    // ==========================================
 
-            // ==================================
+                    for (const elemento of productosSnapshots) {
+
+                        const {
+                            item,
+                            productoRef,
+                            productoSnapshot
+                        } = elemento;
+
+                        const producto =
+                            productoSnapshot.data();
+
+                        const nuevoStock =
+                            Number(producto.stock) -
+                            Number(item.cantidad);
+
+                        transaction.update(
+                            productoRef,
+                            {
+                                stock: nuevoStock,
+                                disponibilidad: nuevoStock > 0
+                            }
+                        );
+                    }
+
+                    // ==========================================
+                    // CREAR PEDIDO
+                    // ==========================================
+
+                    transaction.set(
+                        pedidoRef,
+                        {
+                            numeroPedido: siguienteNumero,
+                            usuarioId: usuario.uid,
+                            productos: productosPedido,
+                            total: total,
+                            fecha: serverTimestamp(),
+                            estado: "confirmado"
+                        }
+                    );
+
+                    return {
+                        total: total,
+                        numeroPedido: siguienteNumero
+                    };
+                }
+            );
+
+            // ==========================================
             // COMPRA REALIZADA CORRECTAMENTE
-            // ==================================
+            // ==========================================
 
             carrito = [];
 
             localStorage.removeItem("carrito");
 
-
-            // Ocultar los mensajes normales
             mensajeCarritoVacio.classList.add("d-none");
             resumenCarrito.classList.add("d-none");
 
-
-            // Mostrar confirmación en el lugar del carrito
             contenedorCarrito.innerHTML = `
-                <div class="col-12">
-                    <div class="alert alert-success text-center">
+                <div class="alert alert-success text-center">
+                    <h2 class="h4 mb-3">
+                        Compra confirmada
+                    </h2>
 
-                        <h2 class="h5 mb-2">
-                            Compra realizada correctamente
-                        </h2>
+                    <p class="mb-2">
+                        Tu pedido fue registrado correctamente.
+                    </p>
 
-                        <p class="mb-2">
-                            Tu pedido fue registrado correctamente.
-                        </p>
+                    <p class="fw-bold mb-2">
+                        Pedido #${String(resultado.numeroPedido).padStart(6, "0")}
+                    </p>
 
-                        <p class="mb-0">
-                            Total:
-                            <strong>
-                                USD ${resultado.total}
-                            </strong>
-                        </p>
-
-                    </div>
+                    <p class="mb-0">
+                        Total: USD ${resultado.total.toFixed(2)}
+                    </p>
                 </div>
             `;
-
-
-            console.log(
-                "Pedido registrado correctamente:",
-                pedidoRef.id
-            );
-
 
         } catch (error) {
 
@@ -627,25 +533,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                 error
             );
 
-
             alert(
                 error.message ||
-                "No se pudo completar la compra. Intentá nuevamente."
+                "No se pudo confirmar la compra."
             );
-
 
         } finally {
 
-            // Volver a habilitar el botón
             btnConfirmarCompra.disabled = false;
-
             btnConfirmarCompra.textContent =
                 "Confirmar compra";
-
         }
-
     }
-
 
     // ==========================================
     // EVENTO CONFIRMAR COMPRA
@@ -656,9 +555,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         confirmarCompra
     );
 
-
     // ==========================================
-    // CARGAR PRODUCTOS Y MOSTRAR CARRITO
+    // INICIAR
     // ==========================================
 
     await cargarProductos();
