@@ -42,29 +42,74 @@
 
     </header>
 
-    <main class='flex-grow-1'>
+    <main class="flex-grow-1">
+
         <div class="container py-5">
-            <section class="locked-module">
-                <div class="locked-icon">🛡️</div>
-                <span class="badge rounded-pill text-bg-warning mb-3">Sprint 3 · Semanas 9 a 12</span>
+
+            <div class="text-center mb-5">
+
                 <h1>Panel administrativo</h1>
-                <p class="lead">Solo será visible para administradores autenticados.</p>
-                <div class="locked-card">
-                    <h2 class="h5">Funcionalidad en desarrollo</h2>
-                    <p>Este módulo forma parte de la arquitectura final, pero su código deberá desarrollarse en el
-                        sprint indicado.</p>
-                    <ul>
-                        <li>Validación de rol</li>
-                        <li>Alta de productos</li>
-                        <li>Edición</li>
-                        <li>Eliminación o baja</li>
-                        <li>Stock y disponibilidad</li>
-                        <li>Consulta de pedidos</li>
-                    </ul>
+
+                <p class="lead">
+                    Gestión de productos de Xentro Tecno
+                </p>
+            </div>
+
+            <section class="card shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+
+                        <div>
+                            <h2 class="h4 mb-1">Productos</h2>
+                            <p class="text-muted mb-0">
+                                Productos registrados en Firestore
+                            </p>
+                        </div>
+
+                        <button class="btn btn-primary" id="btnNuevoProducto">
+                            Nuevo producto
+                        </button>
+
+                    </div>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Categoría</th>
+                                    <th>Marca</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th>Disponibilidad</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="tablaProductos">
+
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        Cargando productos...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
                 </div>
-                <a class="btn btn-outline-primary mt-3" href="index.html">Volver al inicio</a>
+
             </section>
+
         </div>
+
     </main>
 
     <!-- PIE DE PÁGINA -->
@@ -147,6 +192,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/base.js"></script>
     <script type="module" src="js/auth-nav.js"></script>
+    <script type="module" src="js/admin.js"></script>
+    <script type="module" src="js/admin-productos.js"></script>
 </body>
 
 </html>

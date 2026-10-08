@@ -113,6 +113,7 @@ formRegistro?.addEventListener("submit", async (event) => {
                 nombre: nombre,
                 apellido: apellido,
                 email: usuario.email,
+                rol: "cliente",
                 fechaRegistro: serverTimestamp()
             }
         );
