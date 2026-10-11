@@ -21,56 +21,20 @@
     <header>
 
         <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm">
-
             <div class="container">
 
                 <a class="navbar-brand fw-bold" href="index.html">
                     <span class="brand-mark">X</span> Xentro Tecno
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <div class="d-flex align-items-center gap-2 ms-auto order-lg-2">
 
-                    <span class="navbar-toggler-icon"></span>
-
-                </button>
-
-                <div class="collapse navbar-collapse" id="mainNav">
-
-                    <ul class="navbar-nav me-auto">
-
-                        <li class="nav-item">
-                            <a class="nav-link" data-page="inicio" href="index.html">
-                                Inicio
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" data-page="catalogo" href="catalogo.html">
-                                Catálogo
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" data-page="perfil" href="perfil.html">
-                                Mi perfil
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" data-page="admin" href="admin.html">
-                                Administración
-                            </a>
-                        </li>
-
-                    </ul>
-
-                    
-                    <a class="btn btn-outline-light btn-sm me-2" href="carrito.html">
+                    <a class="btn btn-outline-light btn-sm" href="carrito.html"
+                        aria-label="Ver carrito">
                         <span aria-hidden="true">🛒</span>
-                        Carrito
+                        <span class="d-none d-sm-inline">Carrito</span>
                         <span class="badge text-bg-light" id="contadorCarrito">0</span>
                     </a>
-
 
                     <div class="dropdown">
                         <button
@@ -110,8 +74,48 @@
 
                 </div>
 
-            </div>
+                <button
+                    class="navbar-toggler ms-2 order-lg-3"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNav"
+                    aria-controls="mainNav"
+                    aria-expanded="false"
+                    aria-label="Abrir navegación">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
+                <div class="collapse navbar-collapse order-lg-1" id="mainNav">
+                    <ul class="navbar-nav me-auto">
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-page="inicio" href="index.html">
+                                Inicio
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-page="catalogo" href="catalogo.html">
+                                Catálogo
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-page="perfil" href="perfil.html">
+                                Mi perfil
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-page="admin" href="admin.html">
+                                Administración
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
         </nav>
 
     </header>
