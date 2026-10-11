@@ -64,10 +64,41 @@
 
                     </ul>
 
-                    <button class="btn btn-outline-light btn-sm" id="btnLoginPlaceholder">
-                        Ingresar
-                    </button>
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-outline-light btn-sm dropdown-toggle"
+                            type="button"
+                            id="btnLoginPlaceholder"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Ingresar
+                        </button>
 
+                        <ul
+                            class="dropdown-menu dropdown-menu-end"
+                            id="menuUsuario"
+                            aria-labelledby="btnLoginPlaceholder">
+
+                            <li>
+                                <a class="dropdown-item" href="perfil.html">
+                                    Mi perfil
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <button
+                                    class="dropdown-item"
+                                    type="button"
+                                    id="btnCerrarSesion">
+                                    Cerrar sesión
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>
