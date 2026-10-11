@@ -282,3 +282,16 @@ body {
 .error-campo:not(:empty) {
     display: block;
 }
+
+/* Tabla de productos adaptable en Administración */
+.table-responsive {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+    min-width: 700px;
+    margin-bottom: 0;
+}
