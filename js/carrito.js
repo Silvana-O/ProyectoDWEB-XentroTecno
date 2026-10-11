@@ -2,11 +2,9 @@ import { auth, db } from "./firebase/config.js";
 
 import {
     collection,
-    getDocs,
-    doc,
-    runTransaction,
-    serverTimestamp
+    getDocs
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -278,273 +276,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     // CONFIRMAR COMPRA
     // ==========================================
 
-    async function confirmarCompra() {
-
-        const usuario = auth.currentUser;
-
-        if (!usuario) {
-
-            alert("Debes iniciar sesión para confirmar la compra.");
-
-            window.location.href = "login.html";
-
-            return;
-        }
-
-        if (carrito.length === 0) {
-
-            alert("El carrito está vacío.");
-
-            return;
-        }
-
-        btnConfirmarCompra.disabled = true;
-        btnConfirmarCompra.textContent = "Procesando compra...";
-
-        try {
-
-            const pedidoRef = doc(collection(db, "pedidos"));
-
-            const resultado = await runTransaction(
-                db,
-                async (transaction) => {
-
-                    // ==========================================
-                    // OBTENER CONTADOR DE PEDIDOS
-                    // ==========================================
-
-                    const contadorRef = doc(
-                        db,
-                        "contadores",
-                        "pedidos"
-                    );
-
-                    const contadorSnapshot =
-                        await transaction.get(contadorRef);
-
-                    const ultimoNumero =
-                        contadorSnapshot.exists()
-                            ? Number(
-                                contadorSnapshot.data().ultimoNumero || 0
-                            )
-                            : 0;
-
-                    const siguienteNumero =
-                        ultimoNumero + 1;
-
-                    // ==========================================
-                    // LEER TODOS LOS PRODUCTOS
-                    // ==========================================
-
-                    const productosSnapshots = [];
-
-                    for (const item of carrito) {
-
-                        const productoRef = doc(
-                            db,
-                            "productos",
-                            item.id
-                        );
-
-                        const productoSnapshot =
-                            await transaction.get(productoRef);
-
-                        productosSnapshots.push({
-                            item,
-                            productoRef,
-                            productoSnapshot
-                        });
-                    }
-
-                    // ==========================================
-                    // VALIDAR PRODUCTOS Y CALCULAR TOTAL
-                    // ==========================================
-
-                    const productosPedido = [];
-
-                    let total = 0;
-
-                    for (const elemento of productosSnapshots) {
-
-                        const {
-                            item,
-                            productoSnapshot
-                        } = elemento;
-
-                        if (!productoSnapshot.exists()) {
-
-                            throw new Error(
-                                `El producto ${item.id} ya no existe.`
-                            );
-                        }
-
-                        const producto =
-                            productoSnapshot.data();
-
-                        const cantidad =
-                            Number(item.cantidad);
-
-                        const stock =
-                            Number(producto.stock);
-
-                        const precio =
-                            Number(producto.precio);
-
-                        if (
-                            !Number.isInteger(cantidad) ||
-                            cantidad <= 0
-                        ) {
-
-                            throw new Error(
-                                `Cantidad inválida para ${producto.nombre}.`
-                            );
-                        }
-
-                        if (stock < cantidad) {
-
-                            throw new Error(
-                                `No hay suficiente stock de ${producto.nombre}. Stock disponible: ${stock}.`
-                            );
-                        }
-
-                        const subtotal =
-                            precio * cantidad;
-
-                        total += subtotal;
-
-                        productosPedido.push({
-                            productoId: item.id,
-                            nombre: producto.nombre,
-                            precio: precio,
-                            cantidad: cantidad,
-                            subtotal: subtotal
-                        });
-                    }
-
-                    // ==========================================
-                    // ACTUALIZAR CONTADOR
-                    // ==========================================
-
-                    if (contadorSnapshot.exists()) {
-
-                        transaction.update(
-                            contadorRef,
-                            {
-                                ultimoNumero: siguienteNumero
-                            }
-                        );
-
-                    } else {
-
-                        transaction.set(
-                            contadorRef,
-                            {
-                                ultimoNumero: siguienteNumero
-                            }
-                        );
-                    }
-
-                    // ==========================================
-                    // ACTUALIZAR STOCK
-                    // ==========================================
-
-                    for (const elemento of productosSnapshots) {
-
-                        const {
-                            item,
-                            productoRef,
-                            productoSnapshot
-                        } = elemento;
-
-                        const producto =
-                            productoSnapshot.data();
-
-                        const nuevoStock =
-                            Number(producto.stock) -
-                            Number(item.cantidad);
-
-                        transaction.update(
-                            productoRef,
-                            {
-                                stock: nuevoStock,
-                                disponibilidad: nuevoStock > 0
-                            }
-                        );
-                    }
-
-                    // ==========================================
-                    // CREAR PEDIDO
-                    // ==========================================
-
-                    transaction.set(
-                        pedidoRef,
-                        {
-                            numeroPedido: siguienteNumero,
-                            usuarioId: usuario.uid,
-                            productos: productosPedido,
-                            total: total,
-                            fecha: serverTimestamp(),
-                            estado: "confirmado"
-                        }
-                    );
-
-                    return {
-                        total: total,
-                        numeroPedido: siguienteNumero
-                    };
-                }
-            );
-
-            // ==========================================
-            // COMPRA REALIZADA CORRECTAMENTE
-            // ==========================================
-
-            carrito = [];
-
-            localStorage.removeItem("carrito");
-
-            mensajeCarritoVacio.classList.add("d-none");
-            resumenCarrito.classList.add("d-none");
-
-            contenedorCarrito.innerHTML = `
-                <div class="alert alert-success text-center">
-                    <h2 class="h4 mb-3">
-                        Compra confirmada
-                    </h2>
-
-                    <p class="mb-2">
-                        Tu pedido fue registrado correctamente.
-                    </p>
-
-                    <p class="fw-bold mb-2">
-                        Pedido #${String(resultado.numeroPedido).padStart(6, "0")}
-                    </p>
-
-                    <p class="mb-0">
-                        Total: USD ${resultado.total.toFixed(2)}
-                    </p>
-                </div>
-            `;
-
-        } catch (error) {
-
-            console.error(
-                "Error al confirmar la compra:",
-                error
-            );
-
-            alert(
-                error.message ||
-                "No se pudo confirmar la compra."
-            );
-
-        } finally {
-
-            btnConfirmarCompra.disabled = false;
-            btnConfirmarCompra.textContent =
-                "Confirmar compra";
-        }
+    
+function confirmarCompra() {
+    const usuario = auth.currentUser;
+
+    if (!usuario) {
+        alert("Debes iniciar sesión para continuar con la compra.");
+        window.location.href = "login.html";
+        return;
     }
+
+    if (carrito.length === 0) {
+        alert("El carrito está vacío.");
+        return;
+    }
+
+    // Conservar el carrito hasta completar la simulación.
+    window.location.href = "pago.html";
+}
 
     // ==========================================
     // EVENTO CONFIRMAR COMPRA

@@ -270,3 +270,15 @@ body {
     height: 220px;
     object-fit: contain;
 }
+
+.campo-invalido {
+    border-color: #dc3545 !important;
+}
+
+.error-campo {
+    display: none;
+}
+
+.error-campo:not(:empty) {
+    display: block;
+}
