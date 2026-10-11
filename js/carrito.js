@@ -70,11 +70,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         mensajeCarritoVacio.classList.add("d-none");
         resumenCarrito.classList.remove("d-none");
 
-        const total = carrito.reduce(
-            (acumulado, item) =>
-                acumulado + Number(item.precio) * Number(item.cantidad),
-            0
-        );
+        
+        const total = carrito.reduce((acumulado, item) => {
+            const producto = productos.find(
+                (producto) => producto.id === item.id
+            );
+
+            if (!producto) {
+                return acumulado;
+            }
+
+            return acumulado +
+                Number(producto.precio) * Number(item.cantidad);
+        }, 0);
+
 
         document.querySelector("#totalCarrito").textContent =
             `USD ${total.toFixed(2)}`;
@@ -90,7 +99,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             const subtotal =
-                Number(item.precio) * Number(item.cantidad);
+                Number(producto.precio) * Number(item.cantidad);
 
             const tarjeta = document.createElement("div");
 
