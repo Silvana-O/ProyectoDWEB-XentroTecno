@@ -11,45 +11,85 @@ service cloud.firestore {
 
 
     // Productos
-    match /productos/{productoId} {
+    
+match /productos/{productoId} {
 
-      // Todos pueden consultar el catálogo.
-      allow read: if true;
+  // Todos pueden consultar el catálogo.
+  allow read: if true;
 
-      // Solo los administradores pueden crear, editar o eliminar.
-      allow create, update, delete: if request.auth != null
-        && get(
-          /databases/$(database)/documents/usuarios/$(request.auth.uid)
-        ).data.rol == "admin";
-    }
+  // Los administradores pueden crear y eliminar productos.
+  allow create, delete: if request.auth != null
+    && get(
+      /databases/$(database)/documents/usuarios/$(request.auth.uid)
+    ).data.rol == "admin";
 
+  // Los administradores pueden editar productos.
+  // Los compradores solo pueden descontar stock
+  // mediante una transacción vinculada a un pedido.
+  allow update: if request.auth != null
+    && (
+      get(
+        /databases/$(database)/documents/usuarios/$(request.auth.uid)
+      ).data.rol == "admin"
 
-    // Pedidos
-    match /pedidos/{pedidoId} {
+      ||
 
-      // El usuario autenticado puede crear
-      // un pedido asociado a su propio UID
-      allow create: if request.auth != null
-        && request.resource.data.usuarioId == request.auth.uid;
+      (
+        request.resource.data.diff(resource.data)
+          .affectedKeys().hasOnly(["stock", "ultimoPedidoId"])
 
-      // El usuario solamente puede consultar
-      // sus propios pedidos
-      allow read: if request.auth != null
-        && resource.data.usuarioId == request.auth.uid;
+        && resource.data.stock is int
+        && request.resource.data.stock is int
+        && request.resource.data.stock >= 0
+        && request.resource.data.stock < resource.data.stock
 
-      // No permitimos modificar ni eliminar pedidos
-      allow update, delete: if false;
+        && request.resource.data.ultimoPedidoId is string
 
-    }
+        && existsAfter(
+          /databases/$(database)/documents/pedidos/$(request.resource.data.ultimoPedidoId)
+        )
 
+        && getAfter(
+          /databases/$(database)/documents/pedidos/$(request.resource.data.ultimoPedidoId)
+        ).data.usuarioId == request.auth.uid
 
-    // Contador de pedidos
+        && getAfter(
+          /databases/$(database)/documents/pedidos/$(request.resource.data.ultimoPedidoId)
+        ).data.estado == "aprobado_simulado"
+
+        && getAfter(
+          /databases/$(database)/documents/pedidos/$(request.resource.data.ultimoPedidoId)
+        ).data.stockProductos[productoId].cantidad
+          == resource.data.stock - request.resource.data.stock
+      )
+    );
+}
+
+    
+match /pedidos/{pedidoId} {
+
+  // Crear pedidos propios de la simulación.
+  allow create: if request.auth != null
+    && request.resource.data.usuarioId == request.auth.uid
+    && request.resource.data.estado == "aprobado_simulado"
+    && request.resource.data.entorno == "simulacion"
+    && request.resource.data.metodoPago in ["tarjeta", "transferencia"]
+    && request.resource.data.productos is list
+    && request.resource.data.stockProductos is map
+    && request.resource.data.total is number;
+
+  // Consultar únicamente los pedidos propios.
+  allow read: if request.auth != null
+    && resource.data.usuarioId == request.auth.uid;
+
+  // Los pedidos no se pueden modificar ni eliminar.
+  allow update, delete: if false;
+}
+
     match /contadores/{contadorId} {
       allow read, write: if request.auth != null;
     }
 
-
-    // Reseñas
     match /resenas/{resenaId} {
       allow read: if true;
 
