@@ -464,3 +464,7 @@ No obstante se consideran las siguientes posibilidades de mejora:
 - **Proceso de compra:** mejorar el tratamiento de errores, la confirmación de pedidos y la actualización del stock.
 - **Reseñas de productos:** reforzar las validaciones y los permisos para garantizar que los usuarios solo puedan gestionar sus propias reseñas.
 - **Pruebas y mantenimiento:** comprobar el funcionamiento de las páginas y los formularios, corregir errores y verificar la adaptación del sitio a distintos tamaños de pantalla.
+
+### Sprint 4**
+
+- **Diseño del perfil de usuario:** se mejoró la presentación visual del perfil, la organización de los datos personales y la visualización del historial de pedidos, con adaptación a dispositivos móviles.
