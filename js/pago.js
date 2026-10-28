@@ -521,9 +521,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 });
             }
 
-            // Actualizar el contador.
+            // Actualizar el contador y vincularlo con el pedido.
             transaccion.set(referenciaContador, {
-                ultimoNumero: numeroPedido
+                ultimoNumero: numeroPedido,
+                ultimoPedidoId: referenciaPedido.id
             });
 
             // Registrar el pedido con su número correlativo.
