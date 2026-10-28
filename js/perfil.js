@@ -42,6 +42,20 @@ function generarIniciales(nombre, apellido) {
 }
 
 // ==========================================
+// ESCAPAR TEXTO HTML
+// ==========================================
+
+function escaparHTML(valor) {
+    return String(valor ?? "").replace(/[&<>"']/g, caracter => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[caracter]);
+}
+
+// ==========================================
 // FORMATEAR FECHA
 // ==========================================
 
@@ -68,10 +82,10 @@ function formatearFecha(fecha) {
 }
 
 // ==========================================
-// MOSTRAR PEDIDOS
+// MOSTRAR PEDIDOS Y ENLACES DE RESEÑAS
 // ==========================================
 
-function mostrarPedidos(pedidos) {
+function mostrarPedidos(pedidos, productosResenados) {
     if (!contenedorPedidos || !mensajePedidos) {
         return;
     }
@@ -85,6 +99,7 @@ function mostrarPedidos(pedidos) {
         mensajePedidos.textContent =
             "Todavía no realizaste ninguna compra.";
 
+        mensajePedidos.classList.remove("d-none");
         return;
     }
 
@@ -94,31 +109,80 @@ function mostrarPedidos(pedidos) {
         const datos = pedido.data();
 
         const tarjeta = document.createElement("div");
-        tarjeta.classList.add("card", "border", "shadow-sm");
-
-        let productosHTML = "";
+        tarjeta.classList.add("card", "border", "shadow-sm", "mb-3");
 
         const productos = Array.isArray(datos.productos)
             ? datos.productos
             : [];
 
-        productos.forEach(producto => {
-            productosHTML += `
-                <div class="border-bottom py-2">
-                    <div class="d-flex justify-content-between gap-3">
-                        <span class="fw-semibold">
-                            ${producto.nombre ?? "Producto"}
-                        </span>
+        const compraAprobada =
+            datos.estado === "aprobado_simulado";
 
-                        <span>
-                            USD ${producto.subtotal ?? 0}
+        let productosHTML = "";
+
+        productos.forEach(producto => {
+            const nombre = escaparHTML(
+                producto.nombre || "Producto"
+            );
+
+            const subtotal = escaparHTML(
+                producto.subtotal ?? 0
+            );
+
+            const cantidad = escaparHTML(
+                producto.cantidad ?? 0
+            );
+
+            const precio = escaparHTML(
+                producto.precio ?? 0
+            );
+
+            const productoId = producto.productoId
+                ? String(producto.productoId)
+                : "";
+
+            let enlaceResena = "";
+
+            if (compraAprobada && productoId) {
+                if (productosResenados.has(productoId)) {
+                    enlaceResena = `
+                        <span class="badge text-bg-success mt-2">
+                            Reseña enviada
+                        </span>
+                    `;
+                } else {
+                    const urlProducto =
+                        `producto.html?id=${encodeURIComponent(productoId)}#resenas`;
+
+                    enlaceResena = `
+                        <div class="mt-2">
+                            <a
+                                href="${urlProducto}"
+                                class="btn btn-outline-primary btn-sm"
+                                aria-label="Dejar una reseña de ${nombre}">
+                                Dejar reseña
+                            </a>
+                        </div>
+                    `;
+                }
+            }
+
+            productosHTML += `
+                <div class="border-bottom py-3">
+                    <div class="d-flex justify-content-between gap-3">
+                        <span class="fw-semibold">${nombre}</span>
+
+                        <span class="text-nowrap">
+                            USD ${subtotal}
                         </span>
                     </div>
 
                     <small class="text-muted">
-                        Cantidad: ${producto.cantidad ?? 0}
-                        · Precio unitario: USD ${producto.precio ?? 0}
+                        Cantidad: ${cantidad}
+                        · Precio unitario: USD ${precio}
                     </small>
+
+                    ${enlaceResena}
                 </div>
             `;
         });
@@ -126,6 +190,10 @@ function mostrarPedidos(pedidos) {
         const numeroPedido = datos.numeroPedido
             ? String(datos.numeroPedido).padStart(6, "0")
             : pedido.id;
+
+        const estado = escaparHTML(
+            datos.estado ?? "Sin estado"
+        );
 
         tarjeta.innerHTML = `
             <div class="card-body">
@@ -135,16 +203,16 @@ function mostrarPedidos(pedidos) {
 
                     <div>
                         <h3 class="h5 mb-1">
-                            Pedido #${numeroPedido}
+                            Pedido #${escaparHTML(numeroPedido)}
                         </h3>
 
                         <small class="text-muted">
-                            ${formatearFecha(datos.fecha)}
+                            ${escaparHTML(formatearFecha(datos.fecha))}
                         </small>
                     </div>
 
                     <span class="badge text-bg-success mt-2 mt-md-0">
-                        ${datos.estado ?? "Sin estado"}
+                        ${estado}
                     </span>
                 </div>
 
@@ -155,13 +223,38 @@ function mostrarPedidos(pedidos) {
 
                 <div class="text-end border-top pt-3">
                     <span class="fw-semibold">Total:</span>
-                    <strong> USD ${datos.total ?? 0}</strong>
+                    <strong> USD ${escaparHTML(datos.total ?? 0)}</strong>
                 </div>
             </div>
         `;
 
         contenedorPedidos.appendChild(tarjeta);
     });
+}
+
+// ==========================================
+// CARGAR RESEÑAS DEL USUARIO
+// ==========================================
+
+async function cargarProductosResenados(uid) {
+    const productosResenados = new Set();
+
+    const consultaResenas = query(
+        collection(db, "resenas"),
+        where("usuarioId", "==", uid)
+    );
+
+    const snapshotResenas = await getDocs(consultaResenas);
+
+    snapshotResenas.forEach(documento => {
+        const datos = documento.data();
+
+        if (datos.productoId) {
+            productosResenados.add(String(datos.productoId));
+        }
+    });
+
+    return productosResenados;
 }
 
 // ==========================================
@@ -180,19 +273,27 @@ async function cargarPedidos(uid) {
     mensajePedidos.classList.remove("d-none");
 
     try {
-        const referenciaPedidos = collection(db, "pedidos");
-
         const consultaPedidos = query(
-            referenciaPedidos,
+            collection(db, "pedidos"),
             where("usuarioId", "==", uid)
         );
 
-        const snapshot = await getDocs(consultaPedidos);
+        const [snapshotPedidos, productosResenados] =
+            await Promise.all([
+                getDocs(consultaPedidos),
+                cargarProductosResenados(uid)
+            ]);
 
-        mostrarPedidos(snapshot.docs);
+        mostrarPedidos(
+            snapshotPedidos.docs,
+            productosResenados
+        );
 
     } catch (error) {
-        console.error("Error al cargar los pedidos:", error);
+        console.error(
+            "Error al cargar pedidos o reseñas:",
+            error
+        );
 
         mensajePedidos.className =
             "alert alert-danger perfil-orders-message";
@@ -247,13 +348,12 @@ function mostrarDatosUsuario(usuario, datos = {}) {
 // COMPROBAR SESIÓN Y CARGAR PERFIL
 // ==========================================
 
-onAuthStateChanged(auth, async (usuario) => {
+onAuthStateChanged(auth, async usuario => {
     if (!usuario) {
         window.location.href = "login.html";
         return;
     }
 
-    // Mostrar el correo inmediatamente.
     mostrarDatosUsuario(usuario);
 
     try {
@@ -279,6 +379,5 @@ onAuthStateChanged(auth, async (usuario) => {
         );
     }
 
-    // Cargar el historial de compras.
     await cargarPedidos(usuario.uid);
 });

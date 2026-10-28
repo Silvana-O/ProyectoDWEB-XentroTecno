@@ -884,23 +884,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                         );
 
 
-                        formulario.reset();
-
-
-                        mensaje.innerHTML = `
-                            <div class="alert alert-success">
-                                Tu reseña fue publicada correctamente.
-                            </div>
-                        `;
-
-
-                        // Ocultar el formulario después de publicar
+                        // Ocultar el formulario y mostrar el mensaje una sola vez
                         formulario.innerHTML = `
                             <div class="alert alert-success mb-0">
                                 Tu reseña fue publicada correctamente.
                             </div>
                         `;
-
 
                         await cargarResenas(idProducto);
 
