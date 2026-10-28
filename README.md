@@ -444,27 +444,15 @@ Se incorporaron las siguientes funcionalidades:
 * Mejoras en la navegación y en la interfaz responsive.
 
 
-### Próximo sprint
+**### Sprint 4**
 
-Se continuará con las funcionalidades de acuerdo con la planificación del proyecto establecida por el docente.
-No obstante se consideran las siguientes posibilidades de mejora:
+* Durante este sprint se realizaron mejoras en la interfaz, el catálogo de productos y el proceso de compra.
+* Diseño del perfil: se mejoró la presentación visual de la página de perfil.
+* Reseñas de productos: se incorporaron enlaces desde el historial de pedidos para acceder a las reseñas, se ajustó la identificación de productos ya reseñados y se corrigió la duplicación del mensaje de confirmación.
+* Catálogo de productos: se corrigió el funcionamiento de la incorporación de productos al carrito y se verificó que el catálogo muestre únicamente los productos habilitados.
+* Validación de disponibilidad: se agregaron comprobaciones para evitar la compra de productos deshabilitados durante la preparación del pedido y la confirmación de la transacción.
+* Validaciones de compra: se reforzaron las comprobaciones de precio y stock antes de registrar el pedido.
+* Reglas de seguridad: se revisaron las reglas de Firestore relacionadas con la actualización del stock y la validación de las operaciones de compra.
+* Documentación: se actualizó el README para registrar los cambios realizados.
 
-**## Funcionalidades pendientes de mejora**
 
-- **Diseño del perfil de usuario:** mejorar la presentación visual del perfil, organizar mejor los datos personales y destacar el historial de pedidos para facilitar su consulta.
-- **Formulario de registro e inicio de sesión:** mejorar la apariencia de los formularios, la distribución de los campos y la adaptación a dispositivos móviles.
-- **Visibilidad de la contraseña:** incorporar un botón con un ícono de ojo que permita mostrar u ocultar la contraseña mientras se escribe, tanto en el registro como en el inicio de sesión.
-- **Criterios de contraseña:** informar claramente los requisitos de seguridad, como la longitud mínima y otros criterios definidos para las contraseñas, y validar su cumplimiento antes de registrar al usuario.
-- **Validación de formularios:** mejorar los mensajes de error y las indicaciones junto a los campos para que el usuario pueda identificar y corregir los datos ingresados incorrectamente.
-- **Recuperación de contraseña:** incorporar un mecanismo para restablecer la contraseña mediante el correo electrónico registrado.
-- **Experiencia de usuario:** unificar los estilos, botones, mensajes de confirmación y alertas para mantener una apariencia coherente en todas las páginas.
-- **Perfil y sesión:** mejorar la presentación de los datos de la cuenta, las opciones de cierre de sesión y la navegación entre el perfil, el catálogo y el historial de compras.
-- **Seguridad y permisos:** revisar las reglas de Firestore para evitar modificaciones indebidas de roles, productos, pedidos y otros datos.
-- **Gestión de productos:** continuar mejorando la administración del catálogo, el control del stock y la validación de los datos.
-- **Proceso de compra:** mejorar el tratamiento de errores, la confirmación de pedidos y la actualización del stock.
-- **Reseñas de productos:** reforzar las validaciones y los permisos para garantizar que los usuarios solo puedan gestionar sus propias reseñas.
-- **Pruebas y mantenimiento:** comprobar el funcionamiento de las páginas y los formularios, corregir errores y verificar la adaptación del sitio a distintos tamaños de pantalla.
-
-### Sprint 4**
-
-- **Diseño del perfil de usuario:** se mejoró la presentación visual del perfil, la organización de los datos personales y la visualización del historial de pedidos, con adaptación a dispositivos móviles.
