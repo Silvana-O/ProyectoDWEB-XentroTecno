@@ -1,28 +1,24 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Ingresar | Xentro Tecno</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body class="d-flex flex-column min-vh-100" data-page="login">
+<body class="d-flex flex-column min-vh-100 auth-page" data-page="login">
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm">
@@ -41,283 +37,275 @@
                         <span class="badge text-bg-light" id="contadorCarrito">0</span>
                     </a>
 
-                    <a href="login.html" class="btn btn-outline-light btn-sm">
+                    <a href="login.html" class="btn btn-outline-light btn-sm"
+                        aria-current="page">
                         Ingresar
                     </a>
 
                 </div>
 
-                <button
-                    class="navbar-toggler ms-2 order-lg-3"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
+                <button class="navbar-toggler ms-2 order-lg-3" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false"
                     aria-label="Mostrar navegación">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse order-lg-1" id="navbarNav">
-
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" data-page="inicio" href="index.html">
-                                Inicio
-                            </a>
+                            <a class="nav-link" data-page="inicio" href="index.html">Inicio</a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link" data-page="catalogo" href="catalogo.html">
-                                Catálogo
-                            </a>
+                            <a class="nav-link" data-page="catalogo" href="catalogo.html">Catálogo</a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link" data-page="perfil" href="perfil.html">
-                                Mi perfil
-                            </a>
+                            <a class="nav-link" data-page="perfil" href="perfil.html">Mi perfil</a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link" data-page="admin" href="admin.html">
-                                Administración
-                            </a>
+                            <a class="nav-link" data-page="admin" href="admin.html">Administración</a>
                         </li>
                     </ul>
-
                 </div>
+
             </div>
         </nav>
     </header>
 
     <main class="flex-grow-1">
+        <section class="auth-section container py-5">
 
-        <section class="container py-5">
+            <div class="auth-heading text-center mb-4">
+                <span class="auth-eyebrow">TU ESPACIO TECNOLÓGICO</span>
+                <h1 class="auth-title mt-2">Bienvenido a Xentro Tecno</h1>
+                <p class="auth-subtitle mb-0">
+                    Ingresá a tu cuenta o creá una para continuar.
+                </p>
+            </div>
 
             <div class="row justify-content-center">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
 
-                <div class="col-12 col-md-8 col-lg-6">
+                    <section class="auth-card">
 
-                    <div class="card shadow-sm border-0">
+                        <div class="auth-card-brand text-center">
+                            <span class="brand-mark">X</span>
+                        </div>
 
-                        <div class="card-body p-4 p-md-5">
+                        <ul class="nav nav-pills auth-tabs mb-4" id="authTabs"
+                            role="tablist">
 
-                            <div class="text-center mb-4">
-                                <span class="brand-mark">X</span>
+                            <li class="nav-item flex-fill" role="presentation">
+                                <button class="nav-link active w-100" id="login-tab"
+                                    data-bs-toggle="tab" data-bs-target="#login"
+                                    type="button" role="tab" aria-controls="login"
+                                    aria-selected="true">
+                                    Iniciar sesión
+                                </button>
+                            </li>
 
-                                <h1 class="h3 fw-bold mt-3">
-                                    Bienvenido a Xentro Tecno
-                                </h1>
+                            <li class="nav-item flex-fill" role="presentation">
+                                <button class="nav-link w-100" id="register-tab"
+                                    data-bs-toggle="tab" data-bs-target="#register"
+                                    type="button" role="tab" aria-controls="register"
+                                    aria-selected="false">
+                                    Crear cuenta
+                                </button>
+                            </li>
 
-                                <p class="text-muted mb-0">
-                                    Inicia sesión o crea una cuenta para continuar.
-                                </p>
-                            </div>
+                        </ul>
 
-                            <!-- Pestañas -->
-                            <ul class="nav nav-tabs mb-4" id="authTabs" role="tablist">
+                        <div class="tab-content">
 
-                                <li class="nav-item" role="presentation">
-                                    <button
-                                        class="nav-link active w-100"
-                                        id="login-tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#login"
-                                        type="button"
-                                        role="tab"
-                                    >
+                            <!-- INICIO DE SESIÓN -->
+                            <div class="tab-pane fade show active" id="login"
+                                role="tabpanel" aria-labelledby="login-tab" tabindex="0">
+
+                                <div class="auth-form-heading mb-4">
+                                    <h2>Ingresá a tu cuenta</h2>
+                                    <p>Continuá donde dejaste tu experiencia de compra.</p>
+                                </div>
+
+                                <form id="formLogin">
+
+                                    <div class="mb-3">
+                                        <label for="loginEmail" class="form-label">
+                                            Correo electrónico
+                                        </label>
+                                        <input type="email" class="form-control"
+                                            id="loginEmail" name="loginEmail"
+                                            placeholder="nombre@ejemplo.com"
+                                            autocomplete="email" required>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="loginPassword" class="form-label">
+                                            Contraseña
+                                        </label>
+
+                                        <div class="input-group auth-password-group">
+                                            <input type="password" class="form-control"
+                                                id="loginPassword" name="loginPassword"
+                                                placeholder="Ingresá tu contraseña"
+                                                autocomplete="current-password"
+                                                required>
+                                            <button class="btn btn-outline-secondary auth-password-toggle"
+                                                type="button" data-toggle-password="loginPassword"
+                                                aria-label="Mostrar contraseña"
+                                                aria-controls="loginPassword"
+                                                aria-pressed="false">
+                                                Mostrar
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary auth-submit w-100">
                                         Iniciar sesión
                                     </button>
-                                </li>
 
-                                <li class="nav-item" role="presentation">
-                                    <button
-                                        class="nav-link w-100"
-                                        id="register-tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#register"
-                                        type="button"
-                                        role="tab"
-                                    >
-                                        Registrarse
-                                    </button>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content">
-
-                                <!-- INICIO DE SESIÓN -->
-                                <div
-                                    class="tab-pane fade show active"
-                                    id="login"
-                                    role="tabpanel"
-                                >
-
-                                    <form id="formLogin">
-
-                                        <div class="mb-3">
-                                            <label for="loginEmail" class="form-label">
-                                                Correo electrónico
-                                            </label>
-
-                                            <input
-                                                type="email"
-                                                class="form-control"
-                                                id="loginEmail"
-                                                required
-                                            >
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="loginPassword" class="form-label">
-                                                Contraseña
-                                            </label>
-
-                                            <input
-                                                type="password"
-                                                class="form-control"
-                                                id="loginPassword"
-                                                required
-                                            >
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            class="btn btn-primary w-100"
-                                        >
-                                            Iniciar sesión
-                                        </button>
-
-                                    </form>
-
-                                </div>
-
-                                <!-- REGISTRO -->
-                                <div
-                                    class="tab-pane fade"
-                                    id="register"
-                                    role="tabpanel"
-                                >
-
-                                    <form id="formRegistro">
-
-                                        <div class="row">
-
-                                            <div class="col-md-6 mb-3">
-                                                <label for="registerNombre" class="form-label">
-                                                    Nombre
-                                                </label>
-
-                                                <input
-                                                    type="text"
-                                                    class="form-control"
-                                                    id="registerNombre"
-                                                    required
-                                                >
-                                            </div>
-
-                                            <div class="col-md-6 mb-3">
-                                                <label for="registerApellido" class="form-label">
-                                                    Apellido
-                                                </label>
-
-                                                <input
-                                                    type="text"
-                                                    class="form-control"
-                                                    id="registerApellido"
-                                                    required
-                                                >
-                                            </div>
-
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="registerEmail" class="form-label">
-                                                Correo electrónico
-                                            </label>
-
-                                            <input
-                                                type="email"
-                                                class="form-control"
-                                                id="registerEmail"
-                                                required
-                                            >
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="registerPassword" class="form-label">
-                                                Contraseña
-                                            </label>
-
-                                            <input
-                                                type="password"
-                                                class="form-control"
-                                                id="registerPassword"
-                                                required
-                                            >
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="registerPasswordConfirm" class="form-label">
-                                                Confirmar contraseña
-                                            </label>
-
-                                            <input
-                                                type="password"
-                                                class="form-control"
-                                                id="registerPasswordConfirm"
-                                                required
-                                            >
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            class="btn btn-primary w-100"
-                                        >
-                                            Crear cuenta
-                                        </button>
-
-                                    </form>
-
-                                </div>
+                                </form>
 
                             </div>
 
-                            <!-- Mensajes -->
-                            <div
-                                id="authMessage"
-                                class="alert d-none mt-4 mb-0"
-                                role="alert"
-                            ></div>
+                            <!-- REGISTRO -->
+                            <div class="tab-pane fade" id="register"
+                                role="tabpanel" aria-labelledby="register-tab" tabindex="0">
+
+                                <div class="auth-form-heading mb-4">
+                                    <h2>Creá tu cuenta</h2>
+                                    <p>Completá tus datos para registrarte en la tienda.</p>
+                                </div>
+
+                                <form id="formRegistro">
+
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <label for="registerNombre" class="form-label">
+                                                Nombre
+                                            </label>
+                                            <input type="text" class="form-control"
+                                                id="registerNombre" name="nombre"
+                                                placeholder="Tu nombre"
+                                                autocomplete="given-name"
+                                                maxlength="80" required>
+                                        </div>
+
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <label for="registerApellido" class="form-label">
+                                                Apellido
+                                            </label>
+                                            <input type="text" class="form-control"
+                                                id="registerApellido" name="apellido"
+                                                placeholder="Tu apellido"
+                                                autocomplete="family-name"
+                                                maxlength="80" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="registerEmail" class="form-label">
+                                            Correo electrónico
+                                        </label>
+                                        <input type="email" class="form-control"
+                                            id="registerEmail" name="email"
+                                            placeholder="nombre@ejemplo.com"
+                                            autocomplete="email" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="registerPassword" class="form-label">
+                                            Contraseña
+                                        </label>
+
+                                        <div class="input-group auth-password-group">
+                                            <input type="password" class="form-control"
+                                                id="registerPassword" name="password"
+                                                placeholder="Creá una contraseña"
+                                                autocomplete="new-password"
+                                                minlength="6" required
+                                                aria-describedby="passwordRequirements">
+
+                                            <button class="btn btn-outline-secondary auth-password-toggle"
+                                                type="button" data-toggle-password="registerPassword"
+                                                aria-label="Mostrar contraseña"
+                                                aria-controls="registerPassword"
+                                                aria-pressed="false">
+                                                Mostrar
+                                            </button>
+                                        </div>
+
+                                        <div id="passwordRequirements" class="auth-password-help mt-2">
+                                            <p class="mb-2">La contraseña debe tener al menos 6 caracteres.</p>
+                                            <p id="passwordLengthStatus" class="auth-requirement mb-0">
+                                                <span aria-hidden="true">○</span>
+                                                <span>Mínimo 6 caracteres</span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="registerPasswordConfirm" class="form-label">
+                                            Confirmar contraseña
+                                        </label>
+
+                                        <div class="input-group auth-password-group">
+                                            <input type="password" class="form-control"
+                                                id="registerPasswordConfirm"
+                                                name="passwordConfirm"
+                                                placeholder="Repetí tu contraseña"
+                                                autocomplete="new-password"
+                                                minlength="6" required>
+
+                                            <button class="btn btn-outline-secondary auth-password-toggle"
+                                                type="button"
+                                                data-toggle-password="registerPasswordConfirm"
+                                                aria-label="Mostrar contraseña"
+                                                aria-controls="registerPasswordConfirm"
+                                                aria-pressed="false">
+                                                Mostrar
+                                            </button>
+                                        </div>
+
+                                        <div id="passwordMatchStatus" class="auth-password-help mt-2"
+                                            aria-live="polite"></div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary auth-submit w-100">
+                                        Crear cuenta
+                                    </button>
+
+                                </form>
+
+                            </div>
 
                         </div>
-                    </div>
+
+                        <div id="authMessage" class="alert d-none mt-4 mb-0"
+                            role="alert" aria-live="polite"></div>
+
+                        <p class="auth-security-note text-center mt-4 mb-0">
+                            Tus datos se utilizan para gestionar tu cuenta y tus compras.
+                        </p>
+
+                    </section>
 
                 </div>
-
             </div>
 
         </section>
-
     </main>
 
-    <footer class="mt-auto">
-        <div class="container py-4">
-            <div class="text-center">
-                <p class="mb-0">
-                    © 2026 Xentro Tecno. Todos los derechos reservados.
-                </p>
-            </div>
+    <footer class="footer mt-auto">
+        <div class="container py-4 text-center">
+            <p class="mb-0">
+                © 2026 Xentro Tecno. Todos los derechos reservados.
+            </p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script src="js/base.js"></script>
     <script type="module" src="js/auth.js"></script>
 
 </body>
-
 </html>
