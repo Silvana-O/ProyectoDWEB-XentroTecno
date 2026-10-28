@@ -121,136 +121,126 @@
     </header>
 
 
-    <main class='flex-grow-1'>
 
-        <div class="container py-5">
+    <main class="flex-grow-1 perfil-page">
 
-            <!-- PERFIL -->
-            <section class="mb-5">
+        <div class="container py-4 py-lg-5">
 
-                <div class="row justify-content-center">
+            <!-- Encabezado de la página -->
+            <section class="perfil-heading mb-4 mb-lg-5">
+                <span class="perfil-eyebrow">TU CUENTA</span>
+                <h1 class="perfil-page-title">Mi perfil</h1>
+                <p class="perfil-page-subtitle mb-0">
+                    Gestioná tu espacio personal y consultá tus compras.
+                </p>
+            </section>
 
-                    <div class="col-12 col-md-8 col-lg-6">
+            <div class="row g-4">
 
-                        <div class="card shadow-sm border-0">
+                <!-- DATOS PERSONALES -->
+                <div class="col-12 col-lg-4">
 
-                            <div class="card-body p-4 p-md-5">
+                    <section class="perfil-panel h-100">
 
-                                <div class="text-center mb-4">
-
-                                    <div class="brand-mark mx-auto mb-3">
-                                        X
-                                    </div>
-
-                                    <h1 class="h3 fw-bold">
-                                        Mi perfil
-                                    </h1>
-
-                                    <p class="text-muted">
-                                        Datos de tu cuenta en Xentro Tecno
-                                    </p>
-
-                                </div>
-
-
-                                <div class="mb-3">
-
-                                    <label class="form-label fw-semibold">
-                                        Nombre
-                                    </label>
-
-                                    <p
-                                        id="nombreUsuario"
-                                        class="form-control bg-light"
-                                    >
-                                        Cargando...
-                                    </p>
-
-                                </div>
-
-
-                                <div class="mb-4">
-
-                                    <label class="form-label fw-semibold">
-                                        Correo electrónico
-                                    </label>
-
-                                    <p
-                                        id="emailUsuario"
-                                        class="form-control bg-light"
-                                    >
-                                        Cargando...
-                                    </p>
-
-                                </div>
-
-
-                                <button
-                                    type="button"
-                                    id="btnCerrarSesion"
-                                    class="btn btn-outline-danger w-100"
-                                >
-                                    Cerrar sesión
-                                </button>
-
-                            </div>
-
+                        <div class="perfil-panel-heading">
+                            <h2>Información personal</h2>
+                            <p>Los datos asociados a tu cuenta.</p>
                         </div>
 
-                    </div>
+                        <div class="perfil-panel-body">
+
+                            <!-- Avatar con iniciales -->
+                            <div class="perfil-user">
+                                <div
+                                    id="avatarUsuario"
+                                    class="perfil-avatar"
+                                    aria-label="Iniciales del usuario">
+                                    --
+                                </div>
+
+                                <div class="perfil-user-data">
+                                    <h3 id="nombreUsuario" class="perfil-user-name">
+                                        Cargando...
+                                    </h3>
+
+                                    <p id="emailUsuario" class="perfil-user-email">
+                                        Cargando...
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="perfil-divider"></div>
+
+                            <div class="perfil-detail">
+                                <span class="perfil-detail-label">Nombre completo</span>
+                                <p id="nombreCompletoPerfil" class="perfil-detail-value">
+                                    Cargando...
+                                </p>
+                            </div>
+
+                            <div class="perfil-detail">
+                                <span class="perfil-detail-label">Correo electrónico</span>
+                                <p id="correoCompletoPerfil" class="perfil-detail-value">
+                                    Cargando...
+                                </p>
+                            </div>
+
+                            <div class="perfil-account-status">
+                                <span class="perfil-status-dot"></span>
+                                Cuenta autenticada
+                            </div>
+
+                            <a
+                                href="catalogo.html"
+                                class="btn btn-perfil-primary w-100 mt-4">
+                                Explorar catálogo
+                            </a>
+
+                        </div>
+                    </section>
 
                 </div>
 
-            </section>
+                <!-- HISTORIAL DE PEDIDOS -->
+                <div class="col-12 col-lg-8">
 
+                    <section class="perfil-panel h-100">
 
-            <!-- HISTORIAL DE PEDIDOS -->
-            <section>
-
-                <div class="row justify-content-center">
-
-                    <div class="col-12 col-lg-10">
-
-                        <div class="card shadow-sm border-0">
-
-                            <div class="card-body p-4 p-md-5">
-
-                                <div class="text-center mb-4">
-
-                                    <h2 class="h3 fw-bold">
-                                        Historial de pedidos
-                                    </h2>
-
-                                    <p class="text-muted mb-0">
-                                        Consultá las compras realizadas desde tu cuenta.
-                                    </p>
-
-                                </div>
-
-
-                                <div
-                                    id="mensajePedidos"
-                                    class="alert alert-info text-center"
-                                >
-                                    Cargando pedidos...
-                                </div>
-
-
-                                <div
-                                    id="contenedorPedidos"
-                                    class="d-flex flex-column gap-4"
-                                >
-                                </div>
-
+                        <div class="perfil-panel-heading perfil-orders-heading">
+                            <div>
+                                <h2>Mis pedidos</h2>
+                                <p>Consultá el detalle de tus compras.</p>
                             </div>
 
+                            <span class="perfil-orders-label">
+                                Historial
+                            </span>
                         </div>
 
-                    </div>
+                        <!-- ID conservado para perfil.js -->
+                        <div
+                            id="mensajePedidos"
+                            class="alert alert-info perfil-orders-message"
+                            role="status"
+                            aria-live="polite">
+                            Cargando pedidos...
+                        </div>
+
+                        <!-- ID conservado para perfil.js -->
+                        <div
+                            id="contenedorPedidos"
+                            class="perfil-orders-list">
+                        </div>
+
+                    </section>
 
                 </div>
 
-            </section>
+            </div>
+
+            <p class="perfil-bottom-note mt-4 mb-0">
+                Xentro Tecno · Tecnología para estudiar, trabajar y crear.
+            </p>
 
         </div>
 

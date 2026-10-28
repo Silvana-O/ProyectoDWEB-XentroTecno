@@ -295,3 +295,324 @@ body {
     min-width: 700px;
     margin-bottom: 0;
 }
+
+
+/* =========================================
+   PERFIL DE USUARIO - XENTRO TECNO
+   ========================================= */
+
+.perfil-page {
+    --perfil-primary: #0d9488;
+    --perfil-primary-dark: #0f766e;
+    --perfil-text: #123b5d;
+    --perfil-muted: #718096;
+    --perfil-border: #e7edf2;
+    --perfil-soft: #f4f8fa;
+
+    background:
+        radial-gradient(circle at 0% 0%, #e7f6f5 0, transparent 32%),
+        var(--surface);
+}
+
+.perfil-heading {
+    padding-top: 0.5rem;
+}
+
+.perfil-eyebrow {
+    color: var(--perfil-primary-dark);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+}
+
+.perfil-page-title {
+    margin: 0.45rem 0 0.4rem;
+    color: var(--perfil-text);
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+}
+
+.perfil-page-subtitle {
+    color: var(--perfil-muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+/* Paneles */
+
+.perfil-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--perfil-border);
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(18, 59, 93, 0.045);
+}
+
+.perfil-panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.35rem 1.5rem;
+    border-bottom: 1px solid var(--perfil-border);
+}
+
+.perfil-panel-heading h2 {
+    margin: 0;
+    color: var(--perfil-text);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.perfil-panel-heading p {
+    margin: 0.4rem 0 0;
+    color: var(--perfil-muted);
+    font-size: 0.78rem;
+    line-height: 1.6;
+}
+
+.perfil-panel-body {
+    padding: 1.5rem;
+}
+
+/* Usuario y avatar */
+
+.perfil-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.perfil-avatar {
+    display: grid;
+    place-items: center;
+    flex: 0 0 68px;
+    width: 68px;
+    height: 68px;
+    color: #fff;
+    background: linear-gradient(135deg, #0f766e, #2dd4bf);
+    border: 4px solid #e1f5f1;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.perfil-user-data {
+    flex: 1;
+    min-width: 0;
+}
+
+.perfil-user-name {
+    margin: 0;
+    color: var(--perfil-text);
+    font-size: 1rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.perfil-user-email {
+    margin: 0.4rem 0 0;
+    color: var(--perfil-muted);
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+}
+
+.perfil-divider {
+    height: 1px;
+    margin: 1.5rem 0;
+    background: var(--perfil-border);
+}
+
+/* Datos de la cuenta */
+
+.perfil-detail {
+    margin-bottom: 1.2rem;
+}
+
+.perfil-detail-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--perfil-muted);
+    font-size: 0.76rem;
+}
+
+.perfil-detail-value {
+    margin: 0;
+    color: var(--perfil-text);
+    font-size: 0.86rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+.perfil-account-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.7rem;
+    color: #167247;
+    background: #e8f7ee;
+    border-radius: 50px;
+    font-size: 0.73rem;
+    font-weight: 600;
+}
+
+.perfil-status-dot {
+    width: 7px;
+    height: 7px;
+    background: #22a06b;
+    border-radius: 50%;
+}
+
+.btn-perfil-primary {
+    padding: 0.75rem 1rem;
+    color: #fff;
+    background: var(--perfil-primary-dark);
+    border: 1px solid var(--perfil-primary-dark);
+    border-radius: 10px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.btn-perfil-primary:hover,
+.btn-perfil-primary:focus-visible {
+    color: #fff;
+    background: #115e59;
+    border-color: #115e59;
+}
+
+/* Historial */
+
+.perfil-orders-heading {
+    min-height: 88px;
+}
+
+.perfil-orders-label {
+    flex-shrink: 0;
+    padding: 0.4rem 0.7rem;
+    color: var(--perfil-primary-dark);
+    background: #e7f7f3;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.perfil-orders-message {
+    margin: 1.25rem 1.5rem;
+    border-radius: 10px;
+    font-size: 0.82rem;
+}
+
+.perfil-orders-message.d-none {
+    display: none !important;
+}
+
+.perfil-orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.perfil-orders-list:empty {
+    display: none;
+}
+
+/* Tarjetas creadas por perfil.js */
+
+.perfil-orders-list > .card {
+    overflow: hidden;
+    border: 1px solid var(--perfil-border) !important;
+    border-radius: 14px;
+    box-shadow: none !important;
+    transition: border-color 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.perfil-orders-list > .card:hover {
+    border-color: #b9dfda !important;
+    box-shadow: 0 5px 18px rgba(18, 59, 93, 0.045) !important;
+}
+
+.perfil-orders-list > .card .card-body {
+    padding: 1.25rem;
+}
+
+.perfil-orders-list > .card h3 {
+    color: var(--perfil-text);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.perfil-orders-list > .card h4 {
+    color: var(--perfil-text);
+    font-weight: 600;
+}
+
+.perfil-orders-list > .card .border-bottom {
+    border-color: var(--perfil-border) !important;
+}
+
+.perfil-orders-list > .card .border-top {
+    border-color: var(--perfil-border) !important;
+}
+
+.perfil-orders-list > .card .badge {
+    align-self: flex-start;
+    padding: 0.45rem 0.7rem;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: normal;
+}
+
+.perfil-bottom-note {
+    color: var(--perfil-muted);
+    font-size: 0.76rem;
+    text-align: center;
+}
+
+/* Móviles */
+
+@media (max-width: 575.98px) {
+    .perfil-panel {
+        border-radius: 14px;
+    }
+
+    .perfil-panel-heading,
+    .perfil-panel-body {
+        padding: 1.1rem;
+    }
+
+    .perfil-avatar {
+        flex-basis: 60px;
+        width: 60px;
+        height: 60px;
+        font-size: 1.1rem;
+    }
+
+    .perfil-orders-list {
+        gap: 0.8rem;
+        padding: 1rem;
+    }
+
+    .perfil-orders-list > .card .card-body {
+        padding: 1rem;
+    }
+
+    .perfil-orders-heading {
+        align-items: flex-start;
+    }
+
+    .perfil-orders-label {
+        font-size: 0.67rem;
+    }
+
+    .perfil-orders-message {
+        margin: 1rem;
+    }
+}
