@@ -5,7 +5,8 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     setPersistence,
-    browserLocalPersistence
+    browserLocalPersistence,
+    sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
 import {
@@ -315,3 +316,49 @@ formLogin?.addEventListener("submit", async (event) => {
 // Estado inicial del indicador
 actualizarRequisitoPassword();
 actualizarCoincidenciaPassword();
+
+// Recuperación de contraseña
+const btnRecuperarPassword = document.getElementById("btnRecuperarPassword");
+const loginEmail = document.getElementById("loginEmail");
+
+if (btnRecuperarPassword) {
+    btnRecuperarPassword.addEventListener("click", async () => {
+        const email = loginEmail.value.trim();
+
+        if (!email) {
+            mostrarMensaje(
+                "Ingresa tu correo electrónico para recuperar la contraseña.",
+                "warning"
+            );
+            loginEmail.focus();
+            return;
+        }
+
+        btnRecuperarPassword.disabled = true;
+
+        try {
+            await sendPasswordResetEmail(auth, email);
+
+            mostrarMensaje(
+                "Si existe una cuenta asociada a ese correo, recibirás un enlace para restablecer tu contraseña.",
+                "success"
+            );
+        } catch (error) {
+            console.error("Error al recuperar la contraseña:", error);
+
+            if (error.code === "auth/invalid-email") {
+                mostrarMensaje(
+                    "El formato del correo electrónico no es válido.",
+                    "danger"
+                );
+            } else {
+                mostrarMensaje(
+                    "No se pudo procesar la solicitud. Inténtalo nuevamente.",
+                    "danger"
+                );
+            }
+        } finally {
+            btnRecuperarPassword.disabled = false;
+        }
+    });
+}
