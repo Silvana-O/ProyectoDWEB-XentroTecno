@@ -245,6 +245,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
             }
 
+            if (producto.disponibilidad !== true) {
+                throw new Error(
+                    `El producto ${producto.nombre || item.id} ya no está disponible para la compra.`
+                );
+            }
+
             const cantidad = Number(item.cantidad);
             const precio = Number(producto.precio);
             const stock = Number(producto.stock);
@@ -483,9 +489,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
                 const producto = snapshot.data();
+
+                if (producto.disponibilidad !== true) {
+                    throw new Error(
+                        `El producto ${producto.nombre || item.nombre} ya no está disponible para la compra.`
+                    );
+                }
+
                 const stockActual = Number(producto.stock);
                 const precioActual = Number(producto.precio);
-
+                
                 if (
                     !Number.isInteger(stockActual) ||
                     stockActual < item.cantidad
