@@ -375,10 +375,10 @@ Las validaciones realizadas en JavaScript mejoran la experiencia del usuario, pe
 
 Para comprobar los permisos de los distintos roles, se deben utilizar cuentas creadas exclusivamente para la evaluación.
 
-| Rol | Correo electrónico | Contraseña
-|---|---|---
-| Cliente | cliente_prueba@gmail.com | Cliente1
-| Administrador | admin_prueba@gmail.com | Admin1
+| Rol | Correo electrónico | 
+|---|---|
+| Cliente | cliente_prueba@gmail.com |
+| Administrador | admin_prueba@gmail.com | 
 
 Las contraseñas se deben compartir por un medio acordado con el docente y no publicarse en el repositorio.
 
