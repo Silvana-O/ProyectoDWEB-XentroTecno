@@ -455,4 +455,5 @@ Se incorporaron las siguientes funcionalidades:
 * Reglas de seguridad: se revisaron las reglas de Firestore relacionadas con la actualización del stock y la validación de las operaciones de compra.
 * Documentación: se actualizó el README para registrar los cambios realizados.
 
-
+**### Enlace público** 
+https://xentrotecno-e95f2.web.app/index.html
