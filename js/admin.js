@@ -14,7 +14,9 @@ onAuthStateChanged(auth, async (user) => {
 
     // Si no hay usuario autenticado
     if (!user) {
-        window.location.href = "index.html";
+        document.querySelector("main").classList.add("d-none");
+        alert("Debes iniciar sesión para acceder al panel de administración.");
+        window.location.replace("index.html");
         return;
     }
 
@@ -35,6 +37,8 @@ onAuthStateChanged(auth, async (user) => {
 
         // Comprobar el rol
         if (usuario.rol !== "admin") {
+            document.querySelector("main").classList.add("d-none");
+            alert("Acceso denegado. No tienes permisos para acceder al panel de administración.");
             window.location.href = "index.html";
             return;
         }
