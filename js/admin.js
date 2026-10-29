@@ -1,3 +1,4 @@
+
 import { auth, db } from "./firebase/config.js";
 
 import {
@@ -9,48 +10,67 @@ import {
     getDoc
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
+const contenidoAdmin = document.querySelector("main");
 
-onAuthStateChanged(auth, async (user) => {
+// Promesa que permite esperar la autorización antes de cargar los productos.
+window.adminAutorizado = new Promise((resolve) => {
 
-    // Si no hay usuario autenticado
-    if (!user) {
-        document.querySelector("main").classList.add("d-none");
-        alert("Debes iniciar sesión para acceder al panel de administración.");
-        window.location.replace("index.html");
-        return;
-    }
+    onAuthStateChanged(auth, async (user) => {
 
-    try {
+        if (!user) {
+            contenidoAdmin?.classList.add("d-none");
 
-        // Buscar los datos del usuario en Firestore
-        const usuarioRef = doc(db, "usuarios", user.uid);
-        const usuarioSnap = await getDoc(usuarioRef);
+            resolve(false);
 
-        // Si no existe el documento
-        if (!usuarioSnap.exists()) {
-            window.location.href = "index.html";
+            alert("Debes iniciar sesión para acceder al panel de administración.");
+            window.location.replace("index.html");
             return;
         }
 
-        // Obtener los datos del usuario
-        const usuario = usuarioSnap.data();
+        try {
+            const usuarioRef = doc(db, "usuarios", user.uid);
+            const usuarioSnap = await getDoc(usuarioRef);
 
-        // Comprobar el rol
-        if (usuario.rol !== "admin") {
-            document.querySelector("main").classList.add("d-none");
-            alert("Acceso denegado. No tienes permisos para acceder al panel de administración.");
-            window.location.href = "index.html";
-            return;
+            if (!usuarioSnap.exists()) {
+                contenidoAdmin?.classList.add("d-none");
+
+                resolve(false);
+
+                alert("No se encontraron los datos del usuario.");
+                window.location.replace("index.html");
+                return;
+            }
+
+            const usuario = usuarioSnap.data();
+
+            if (usuario.rol !== "admin") {
+                contenidoAdmin?.classList.add("d-none");
+
+                resolve(false);
+
+                alert("Acceso denegado. No tienes permisos para acceder al panel de administración.");
+                window.location.replace("index.html");
+                return;
+            }
+
+            // El usuario está autorizado.
+            contenidoAdmin?.classList.remove("d-none");
+
+            console.log("Acceso autorizado: administrador.");
+
+            resolve(true);
+
+        } catch (error) {
+            console.error("Error al verificar el rol:", error);
+
+            contenidoAdmin?.classList.add("d-none");
+
+            resolve(false);
+
+            alert("No se pudo verificar el acceso al panel.");
+            window.location.replace("index.html");
         }
 
-        // Si llegó hasta acá, es administrador
-        console.log("Acceso autorizado: administrador");
-
-    } catch (error) {
-
-        console.error("Error al verificar el rol:", error);
-
-        window.location.href = "index.html";
-    }
+    });
 
 });

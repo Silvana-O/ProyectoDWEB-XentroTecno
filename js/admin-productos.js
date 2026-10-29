@@ -9,6 +9,11 @@ import {
     deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
+const autorizado = await window.adminAutorizado;
+
+if (!autorizado) {
+    throw new Error("Acceso no autorizado al panel de administración.");
+}
 
 const tablaProductos = document.querySelector("#tablaProductos");
 let productoEditandoId = null;
