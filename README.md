@@ -1,47 +1,44 @@
-**# Xentro Tecno**
+# Xentro Tecno
 
-**## Estudiante**
+## 1. Información del proyecto
 
-Silvana Ottonelli
+**Estudiante:** Silvana Ottonelli
 
-**## Descripción del proyecto**
+**Asignatura:** Desarrollo Web
 
-Xentro Tecno es un e-commerce dedicado a la venta de productos tecnológicos. El sitio permite explorar una selección de notebooks, monitores, periféricos, audio y accesorios tecnológicos, ofreciendo una interfaz moderna, clara y adaptable a distintos dispositivos.
+**Tipo de proyecto:** E-commerce de productos tecnológicos
 
-Este proyecto fue desarrollado como parte del proyecto académico de Desarrollo Web. A lo largo de los distintos sprints, evolucionó desde un catálogo dinámico con almacenamiento local hasta una aplicación integrada con Firebase, con autenticación de usuarios, gestión de productos, administración de pedidos y un proceso de compra con pago simulado.
+**Sitio web:** https://xentrotecno-e95f2.web.app/
 
-**## Público objetivo**
+## 2. Descripción
 
-* Estudiantes.
-* Profesionales.
-* Personas interesadas en tecnología.
-* Usuarios que buscan productos informáticos para estudio, trabajo o entretenimiento.
+Xentro Tecno es una aplicación web de comercio electrónico orientada a la venta de productos tecnológicos. Permite explorar un catálogo de notebooks, monitores, periféricos, productos de audio y accesorios tecnológicos, consultar los detalles de cada producto, gestionar un carrito y realizar un proceso de compra con pago simulado.
 
-**## Categorías de productos**
+El proyecto se desarrolló de forma progresiva a lo largo de distintos sprints, incorporando una interfaz responsive, búsqueda y filtros, autenticación de usuarios, almacenamiento de información en la nube, gestión de productos, historial de pedidos y validaciones del proceso de compra.
 
-* Notebooks.
-* Monitores.
-* Periféricos.
-* Audio.
-* Accesorios tecnológicos.
+## 3. Público objetivo
 
-**## Tecnologías utilizadas**
+- Estudiantes.
+- Profesionales.
+- Personas interesadas en la tecnología.
+- Usuarios que buscan productos informáticos para estudiar, trabajar o entretenerse.
 
-* HTML5.
-* CSS3.
-* Bootstrap 5.3.3.
-* JavaScript.
-* Firebase Authentication.
-* Cloud Firestore.
-* LocalStorage.
-* Git.
-* GitHub.
+## 4. Tecnologías y servicios utilizados
 
-**## Estructura del proyecto**
+- **HTML5:** estructura y contenido de las páginas.
+- **CSS3:** estilos y personalización visual.
+- **Bootstrap 5.3.3:** componentes y diseño responsive.
+- **JavaScript:** lógica e interactividad de la aplicación.
+- **Firebase Authentication:** registro e inicio de sesión.
+- **Cloud Firestore:** almacenamiento y consulta de datos.
+- **LocalStorage:** persistencia del carrito en el navegador.
+- **Git y GitHub:** control de versiones y alojamiento del código.
+- **Firebase Hosting:** publicación de la aplicación web.
+
+## 5. Estructura del proyecto
 
 ```text
 /
-
 ├── index.html
 ├── catalogo.html
 ├── producto.html
@@ -52,10 +49,10 @@ Este proyecto fue desarrollado como parte del proyecto académico de Desarrollo 
 ├── pago.html
 ├── confirmacion.html
 ├── firestore.rules
-│
+├── firebase.json
+├── .firebaserc
 ├── css/
 │   └── styles.css
-│
 ├── js/
 │   ├── base.js
 │   ├── productos.js
@@ -69,69 +66,55 @@ Este proyecto fue desarrollado como parte del proyecto académico de Desarrollo 
 │   ├── admin-productos.js
 │   ├── pago.js
 │   ├── confirmacion.js
-│   │
 │   └── firebase/
 │       ├── config.js
 │       └── exportar-productos.js
-│
 ├── img/
 │   └── Imágenes de productos
-│
 └── README.md
 ```
 
-**## Funcionalidades desarrolladas en el Sprint 1**
+## 6. Funcionalidades de la aplicación
 
-* Personalización de la identidad visual.
-* Barra de navegación responsive.
-* Hero principal.
-* Productos destacados.
-* Sección de beneficios.
-* Footer.
-* Diseño responsive.
-* Uso de HTML semántico.
-* Estilos personalizados mediante CSS y Bootstrap.
-* Navegación entre las páginas del proyecto.
+### 6.1. Inicio y diseño visual
 
-**## Funcionalidades desarrolladas en el Sprint 2**
+- Identidad visual propia para Xentro Tecno.
+- Barra de navegación responsive.
+- Sección principal de presentación.
+- Productos destacados.
+- Sección de beneficios.
+- Pie de página con información y enlaces.
+- Diseño adaptable a distintos tamaños de pantalla.
+- Uso de HTML semántico, Bootstrap y estilos personalizados.
 
-**### Catálogo dinámico**
+### 6.2. Catálogo de productos
 
-Inicialmente, los productos se representaban mediante objetos JavaScript almacenados en un array dentro de `js/productos.js`. Posteriormente, el catálogo se amplió y se integró con Cloud Firestore para consultar los productos almacenados en la base de datos.
+El catálogo obtiene los productos almacenados en Cloud Firestore y presenta su información de forma dinámica.
 
-Cada producto contiene información como:
+Cada producto puede incluir:
 
-* ID.
-* Nombre.
-* Descripción.
-* Categoría.
-* Precio.
-* Stock.
-* Disponibilidad.
-* Imagen.
-* Marca.
-* Modelo.
-* Características.
+- Nombre y descripción.
+- Categoría.
+- Precio.
+- Stock disponible.
+- Estado de disponibilidad.
+- Imagen.
+- Marca y modelo.
+- Características.
 
-El catálogo se genera dinámicamente a partir de los datos disponibles.
+El catálogo incorpora las siguientes funcionalidades:
 
-**### Búsqueda y filtros**
+- Búsqueda por nombre y otros datos del producto.
+- Búsqueda por descripción, categoría, marca y modelo.
+- Reconocimiento de términos equivalentes, como monitor/pantalla, mouse/ratón y notebook/laptop.
+- Filtros por categoría.
+- Combinación de búsqueda y filtros.
+- Mensajes cuando no existen resultados.
+- Visualización únicamente de productos habilitados para la venta.
 
-El catálogo permite:
+### 6.3. Detalle de producto
 
-* Buscar productos por nombre.
-* Buscar por descripción, categoría, marca y modelo.
-* Reconocer términos equivalentes, como monitor/pantalla, mouse/ratón y notebook/laptop.
-* Filtrar productos por categoría.
-* Combinar la búsqueda con los filtros.
-* Mostrar un mensaje cuando no existen resultados.
-* Limpiar los filtros y volver a mostrar los productos.
-
-Estas funcionalidades se gestionan mediante `js/catalogo.js`.
-
-**### Detalle dinámico de productos**
-
-La página `producto.html` utiliza el parámetro `id` de la URL para identificar el producto seleccionado.
+La página `producto.html` presenta la información del producto seleccionado mediante el parámetro `id` de la URL.
 
 Ejemplo:
 
@@ -139,321 +122,274 @@ Ejemplo:
 producto.html?id=p1
 ```
 
-A partir del identificador se obtiene la información correspondiente al producto.
+Permite consultar los datos del producto, seleccionar una cantidad y agregarlo al carrito, respetando las validaciones de disponibilidad y stock implementadas.
 
-La página permite consultar:
-
-* Imagen.
-* Nombre.
-* Descripción.
-* Categoría.
-* Precio.
-* Stock disponible.
-* Marca.
-* Modelo.
-* Características.
-
-También permite seleccionar cantidades y continuar con el proceso de compra, respetando las validaciones de stock implementadas.
-
-Esta funcionalidad se implementa en `js/producto.js`.
-
-**### Carrito de compras**
+### 6.4. Carrito de compras
 
 El carrito permite:
 
-* Agregar productos desde el catálogo.
-* Agregar productos desde la página de detalle.
-* Aumentar y disminuir cantidades.
-* Eliminar productos.
-* Controlar que la cantidad seleccionada no supere el stock disponible.
-* Mostrar el subtotal de cada producto.
-* Calcular el total general.
-* Mostrar un mensaje cuando el carrito está vacío.
-* Continuar comprando y regresar al catálogo.
-* Acceder al carrito después de agregar un producto.
-* Continuar con el proceso de compra.
+- Agregar productos desde el catálogo y desde su página de detalle.
+- Aumentar o disminuir cantidades.
+- Eliminar productos.
+- Validar las cantidades según el stock disponible.
+- Calcular subtotales y el importe total.
+- Mostrar un mensaje cuando está vacío.
+- Continuar comprando o avanzar al proceso de compra.
+- Mantener los productos seleccionados al recargar la página.
 
-La lógica del carrito se encuentra en `js/carrito.js`.
+La información del carrito se conserva mediante `LocalStorage`. Los datos guardados identifican los productos seleccionados y sus cantidades; los precios, las imágenes y el stock se consultan desde Firestore.
 
-**### Persistencia mediante LocalStorage**
+Agregar productos al carrito no descuenta por sí mismo el stock. La actualización se gestiona durante el proceso de compra.
 
-Los productos agregados al carrito se almacenan en `localStorage`, permitiendo conservar la información aunque se recargue la página o se cierre y vuelva a abrir el navegador.
+### 6.5. Registro, inicio y cierre de sesión
 
-Para guardar y recuperar la información se utilizan:
+La autenticación se implementa mediante Firebase Authentication.
 
-* `JSON.stringify()`.
-* `JSON.parse()`.
-* `localStorage.setItem()`.
-* `localStorage.getItem()`.
+La aplicación permite:
 
-Los datos almacenados corresponden a los productos seleccionados y sus respectivas cantidades.
+- Registrar usuarios con correo electrónico y contraseña.
+- Validar los campos del formulario.
+- Comprobar que las contraseñas coincidan.
+- Validar la longitud mínima de la contraseña.
+- Iniciar sesión con credenciales registradas.
+- Mantener la sesión según la persistencia configurada.
+- Cerrar sesión.
+- Mostrar mensajes ante errores de autenticación.
 
-El stock original no se descuenta simplemente por agregar productos al carrito. La actualización del stock se integra con el proceso de compra.
+### 6.6. Navegación según el usuario
 
-**## Funcionalidades desarrolladas en el Sprint 3**
+La navegación se adapta al estado de autenticación.
 
-**### Registro e inicio de sesión**
+Cuando el usuario inicia sesión, se actualizan las opciones disponibles y se muestra su información en el menú. También se habilita el acceso a las secciones que correspondan a su rol.
 
-La autenticación de usuarios se implementa mediante Firebase Authentication.
+La aplicación diferencia entre clientes y administradores. La protección de las páginas y de las operaciones administrativas debe complementarse con las reglas de seguridad de Firestore.
 
-La página `login.html` centraliza las opciones de registro e inicio de sesión.
+### 6.7. Perfil e historial de pedidos
 
-El sistema permite:
+La página `perfil.html` permite consultar la información básica del usuario autenticado y acceder a su historial de compras.
 
-* Registrar usuarios con correo electrónico y contraseña.
-* Validar los campos obligatorios.
-* Comprobar que las contraseñas coincidan.
-* Validar la longitud mínima de la contraseña.
-* Iniciar sesión con credenciales registradas.
-* Mantener la sesión mediante la persistencia configurada.
-* Cerrar sesión.
-* Mostrar mensajes ante errores de autenticación.
-* Redirigir al usuario a las páginas correspondientes según el estado de su sesión.
+El perfil incluye:
 
-Estas funcionalidades se gestionan mediante `js/auth.js`.
+- Nombre del usuario.
+- Correo electrónico.
+- Historial de pedidos.
+- Acceso a las funcionalidades relacionadas con las compras y reseñas disponibles.
+- Opción para cerrar sesión.
 
-**### Integración con Cloud Firestore**
+El historial permite consultar información de los pedidos, como su número, fecha, estado, productos, cantidades, precios, subtotales e importe total.
 
-Se incorporó Cloud Firestore para almacenar y consultar información de la aplicación.
+Los pedidos deben consultarse asociados al usuario autenticado.
 
-Las principales colecciones utilizadas son:
+### 6.8. Panel de administración
 
-* `usuarios`: información complementaria de los usuarios y sus roles.
-* `productos`: datos del catálogo y stock disponible.
-* `pedidos`: información de las compras registradas.
-* `contadores`: numeración correlativa de pedidos.
-* `resenas`: reseñas y valoraciones de productos.
+La página `admin.html` incorpora herramientas para gestionar el catálogo de productos.
 
-Los productos pueden incluir campos como nombre, descripción, categoría, precio, stock, disponibilidad, imagen, marca, modelo y características.
+El panel permite:
+
+- Consultar los productos registrados.
+- Crear productos.
+- Editar productos existentes.
+- Eliminar productos.
+- Modificar nombres, categorías, marcas y modelos.
+- Actualizar descripciones y características.
+- Gestionar precios, imágenes, stock y disponibilidad.
+- Visualizar los productos en una tabla adaptable.
+
+Las operaciones se implementan mediante JavaScript y se conectan con Cloud Firestore.
+
+El acceso al panel está restringido a usuarios con rol de administrador. La aplicación verifica la autenticación y los permisos antes de mostrar el contenido administrativo, y redirige a los usuarios que no están autorizados.
+
+### 6.9. Proceso de compra
+
+El proceso de compra integra el carrito con Firestore y contempla:
+
+- Recuperación de los productos seleccionados.
+- Validación de cantidades.
+- Comprobación del stock disponible.
+- Verificación del precio vigente.
+- Comprobación de que los productos estén habilitados para la venta.
+- Registro del pedido.
+- Asignación de un número correlativo.
+- Actualización del stock.
+- Continuación al proceso de pago simulado.
+
+Las validaciones buscan evitar que se registren compras con productos deshabilitados, cantidades superiores al stock o precios que no coincidan con los datos vigentes.
+
+### 6.10. Pago simulado y confirmación
+
+La página `pago.html` forma parte del flujo de compra y permite realizar una simulación del pago con fines académicos.
+
+La aplicación no realiza cobros financieros reales.
+
+Después del proceso, `confirmacion.html` consulta y presenta la información del pedido, incluyendo el número de compra, los productos, las cantidades y el importe total, de acuerdo con los datos registrados.
+
+### 6.11. Reseñas de productos
+
+La aplicación incorpora la colección `resenas` en Firestore para almacenar reseñas y valoraciones relacionadas con los productos.
+
+Se realizaron mejoras para facilitar el acceso a las reseñas desde el historial de pedidos, identificar productos que ya fueron reseñados y evitar la duplicación del mensaje de confirmación.
+
+Las operaciones disponibles están sujetas a las validaciones de la aplicación y a las reglas de seguridad configuradas para la colección.
+
+## 7. Roles de usuario
+
+La aplicación contempla dos roles:
+
+**Cliente**
+
+- Consultar el catálogo y los detalles de los productos.
+- Buscar y filtrar productos.
+- Gestionar el carrito.
+- Realizar el proceso de compra simulado.
+- Consultar su perfil e historial de pedidos.
+- Acceder a las funcionalidades de reseñas disponibles.
+
+**Administrador**
+
+- Acceder al panel de administración.
+- Consultar los productos registrados.
+- Crear, editar y eliminar productos.
+- Modificar precios, stock, disponibilidad e información descriptiva.
+
+El rol se almacena en el documento correspondiente al usuario en Cloud Firestore. El registro público no debe permitir que una persona se asigne el rol de administrador a sí misma. Este rol se asigna únicamente a las cuentas autorizadas.
+
+## 8. Base de datos y seguridad
+
+La aplicación utiliza Cloud Firestore para almacenar y consultar la información.
+
+Las principales colecciones son:
+
+| Colección | Finalidad |
+|---|---|
+| `usuarios` | Información complementaria de los usuarios y sus roles. |
+| `productos` | Datos del catálogo, precios, disponibilidad y stock. |
+| `pedidos` | Información de las compras registradas. |
+| `contadores` | Numeración correlativa de pedidos. |
+| `resenas` | Reseñas y valoraciones de productos. |
 
 La configuración de Firebase se encuentra en `js/firebase/config.js`.
 
-El archivo `js/firebase/exportar-productos.js` permite cargar en Firestore los productos definidos inicialmente en JavaScript.
+El archivo `firestore.rules` contiene las reglas de acceso a la base de datos. Estas deben establecer permisos acordes con cada operación, incluyendo:
+
+- Lectura del catálogo según los permisos definidos.
+- Restricción de las operaciones administrativas sobre productos.
+- Protección de la información de los usuarios.
+- Acceso de cada cliente únicamente a sus propios pedidos.
+- Validaciones para las operaciones de compra y actualización del stock.
+- Permisos para crear y consultar reseñas.
+
+Las validaciones realizadas en JavaScript mejoran la experiencia del usuario, pero no sustituyen las reglas de seguridad de Firestore.
+
+## 9. Organización de los archivos JavaScript
+
+| Archivo | Responsabilidad |
+|---|---|
+| `base.js` | Funcionalidades generales compartidas por las páginas. |
+| `productos.js` | Datos iniciales del catálogo. |
+| `catalogo.js` | Consulta, visualización, búsqueda y filtros del catálogo. |
+| `producto.js` | Detalle dinámico de los productos. |
+| `carrito.js` | Gestión del carrito, cantidades y cálculos. |
+| `auth.js` | Registro, inicio de sesión y cierre de sesión. |
+| `auth-nav.js` | Actualización de la navegación según la sesión y el usuario. |
+| `perfil.js` | Información del perfil e historial de pedidos. |
+| `admin.js` | Verificación de autenticación y permisos administrativos. |
+| `admin-productos.js` | Operaciones de administración del catálogo. |
+| `pago.js` | Lógica del pago simulado. |
+| `confirmacion.js` | Consulta y presentación del pedido confirmado. |
+| `firebase/config.js` | Inicialización de Firebase y acceso a sus servicios. |
+| `firebase/exportar-productos.js` | Herramienta para cargar los productos iniciales en Firestore. |
+
+## 10. Desarrollo por sprints
+
+### Sprint 1: estructura y diseño
+
+- Creación de la identidad visual.
+- Estructura de las páginas.
+- Navegación entre secciones.
+- Productos destacados.
+- Sección de beneficios y pie de página.
+- Estilos personalizados y diseño responsive.
+
+### Sprint 2: catálogo y carrito
+
+- Catálogo dinámico.
+- Búsqueda y filtros.
+- Detalle dinámico de productos.
+- Validaciones de stock.
+- Carrito de compras.
+- Modificación y eliminación de productos del carrito.
+- Cálculo de subtotales y total.
+- Persistencia del carrito mediante LocalStorage.
+
+### Sprint 3: autenticación e integración con Firebase
+
+- Registro e inicio de sesión.
+- Integración con Firebase Authentication.
+- Integración con Cloud Firestore.
+- Migración del catálogo a la base de datos.
+- Navegación según el estado de autenticación.
+- Perfil e historial de pedidos.
+- Panel administrativo y operaciones CRUD.
+- Reglas de seguridad de Firestore.
+- Registro y numeración de pedidos.
+- Proceso de compra y pago simulado.
+- Confirmación de compra.
+- Incorporación de reseñas de productos.
+- Mejoras de navegación y diseño responsive.
+
+### Sprint 4: mejoras y validaciones
+
+- Mejora visual de la página de perfil.
+- Mejoras en el acceso a las reseñas desde el historial de pedidos.
+- Corrección de la identificación de productos ya reseñados.
+- Corrección de la duplicación del mensaje de confirmación.
+- Corrección del funcionamiento de la incorporación de productos al carrito.
+- Ajuste del catálogo para mostrar únicamente productos habilitados.
+- Validaciones para impedir la compra de productos deshabilitados.
+- Refuerzo de las comprobaciones de precio y stock durante el proceso de compra.
+- Revisión de las reglas de Firestore relacionadas con el stock y las operaciones de compra.
+- Mejoras en la protección del panel administrativo.
+- Actualización de la documentación del proyecto.
+- Publicación de la aplicación mediante Firebase Hosting.
+
+## 11. Decisiones de diseño
+
+- Se utilizó una identidad visual basada en tonos azules, celestes y turquesa.
+- Se incorporó la tipografía Poppins para mantener una presentación coherente.
+- Se empleó Bootstrap para facilitar la adaptación a distintos dispositivos.
+- Se diseñó una interfaz clara y orientada a la navegación por productos.
+- Se separó la lógica JavaScript en archivos específicos para facilitar el mantenimiento.
+- Se incorporó Firebase para la autenticación y la persistencia de datos en la nube.
+- Se utilizaron reglas de Firestore como mecanismo de control de acceso a los datos.
+- Las funcionalidades se incorporaron progresivamente según los objetivos de cada sprint.
+
+## 12. Limitaciones conocidas
+
+- El proceso de pago es una simulación académica y no realiza cobros reales.
+- La aplicación está desarrollada con fines educativos y no constituye por sí sola una plataforma preparada para operar como comercio electrónico de producción.
+- La seguridad de las operaciones depende de la correcta configuración y publicación de las reglas de Firestore.
+- El funcionamiento integral debe comprobarse en el entorno publicado, incluyendo autenticación, permisos, compras, actualización de stock, reseñas y navegación en dispositivos móviles.
+- La recuperación de contraseña, la verificación de correo electrónico y los pagos reales no forman parte del alcance documentado del proyecto.
 
-**### Navegación según el estado de autenticación**
+## 13. Cuentas de evaluación
 
-La navegación se adapta al estado de la sesión del usuario.
+Para comprobar los permisos de los distintos roles, se deben utilizar cuentas creadas exclusivamente para la evaluación.
 
-Permite:
+| Rol | Correo electrónico | Contraseña
+|---|---|---
+| Cliente | cliente_prueba@gmail.com | Cliente1
+| Administrador | admin_prueba@gmail.com | Admin1
 
-* Mostrar las opciones correspondientes al usuario autenticado.
-* Presentar información del usuario en el menú.
-* Acceder a las secciones disponibles.
-* Cerrar sesión desde el menú.
-* Mantener una navegación coherente entre las páginas del sitio.
+Las contraseñas se deben compartir por un medio acordado con el docente y no publicarse en el repositorio.
 
-Esta funcionalidad se implementa mediante `js/auth-nav.js`.
+## 14. Publicación
 
-**### Perfil de usuario**
+La aplicación está publicada mediante Firebase Hosting.
 
-La página `perfil.html` permite consultar los datos básicos del usuario autenticado.
+**Enlace al sitio web:** https://xentrotecno-e95f2.web.app/
 
-Incluye:
+**Proyecto de Firebase:** `xentrotecno-e95f2`
 
-* Nombre del usuario.
-* Correo electrónico.
-* Acceso al historial de pedidos.
-* Opción para cerrar sesión.
+La URL pública permite acceder a la aplicación desplegada. Los cambios realizados en el código deben publicarse nuevamente en Firebase Hosting para que se reflejen en el sitio.
 
-Si el usuario no está autenticado, se lo redirige al inicio de sesión.
 
-La lógica del perfil se encuentra en `js/perfil.js`.
-
-**### Panel de administración**
-
-La página `admin.html` incorpora funcionalidades para la administración de productos.
-
-El sistema contempla:
-
-* Visualización de los productos registrados.
-* Alta de nuevos productos.
-* Edición de productos existentes.
-* Eliminación de productos.
-* Gestión de nombres, categorías, marcas y modelos.
-* Actualización de descripciones y características.
-* Gestión de precios, imágenes, stock y disponibilidad.
-* Presentación de los productos en una tabla adaptable a diferentes tamaños de pantalla.
-
-La lógica de acceso administrativo se encuentra en `js/admin.js`, mientras que las operaciones sobre los productos se gestionan mediante `js/admin-productos.js`.
-
-El acceso se vincula con el rol del usuario almacenado en Firestore. Los permisos también deben estar controlados mediante las reglas de seguridad de la base de datos.
-
-**### Reglas de seguridad de Firestore**
-
-El archivo `firestore.rules` define los permisos de acceso a las colecciones de la base de datos.
-
-Las reglas contemplan:
-
-* Acceso a la información de los usuarios.
-* Lectura pública del catálogo.
-* Restricciones para las operaciones administrativas sobre productos.
-* Acceso de los usuarios a sus propios pedidos.
-* Validaciones relacionadas con el registro de compras y la actualización del stock.
-* Permisos para las reseñas.
-
-Las reglas constituyen una capa de protección independiente de las validaciones realizadas en JavaScript.
-
-**## Funcionalidades desarrolladas posteriormente**
-
-**### Proceso de compra**
-
-Se incorporó un flujo de compra integrado con Firestore para registrar los pedidos y gestionar la actualización del stock.
-
-El proceso contempla:
-
-* Recuperación de los productos seleccionados.
-* Validación de las cantidades y del stock disponible.
-* Cálculo de los importes de la compra.
-* Registro del pedido en Firestore.
-* Asignación de un número correlativo al pedido.
-* Actualización del stock de los productos.
-* Continuación hacia el proceso de pago simulado.
-
-**### Pago simulado**
-
-La página `pago.html`, junto con `js/pago.js`, forma parte del proceso de compra.
-
-La funcionalidad permite realizar una simulación del pago con fines académicos, sin efectuar cargos financieros reales.
-
-El flujo contempla el registro del resultado de la operación y su integración con la confirmación del pedido.
-
-**### Confirmación de compra**
-
-La página `confirmacion.html` presenta los datos del pedido después del proceso de compra.
-
-Incluye:
-
-* Recuperación del identificador del pedido.
-* Consulta de la información almacenada en Firestore.
-* Verificación de que el pedido corresponde al usuario autenticado.
-* Comprobación del estado del pedido.
-* Visualización del número de pedido.
-* Presentación de los productos y sus cantidades.
-* Visualización del importe total.
-
-Esta funcionalidad se implementa mediante `js/confirmacion.js`.
-
-**### Historial de pedidos**
-
-El perfil del usuario incorpora un historial de compras consultado desde Firestore.
-
-Permite visualizar información como:
-
-* Número de pedido.
-* Fecha.
-* Estado.
-* Productos incluidos.
-* Cantidades.
-* Precios y subtotales.
-* Importe total.
-
-Los pedidos se consultan según la identificación del usuario autenticado.
-
-**### Reseñas de productos**
-
-Se incorporó la colección `resenas` en Firestore para almacenar reseñas y valoraciones relacionadas con los productos.
-
-Las operaciones permitidas dependen de las reglas de seguridad configuradas para esta colección.
-
-**## Organización de los archivos JavaScript**
-
-* `base.js`: funcionalidades generales compartidas por las páginas.
-* `productos.js`: contiene el array de productos utilizado como catálogo inicial.
-* `catalogo.js`: consulta y genera el catálogo, y gestiona las búsquedas y los filtros.
-* `producto.js`: gestiona el detalle dinámico de cada producto.
-* `carrito.js`: administra el carrito, las cantidades y los cálculos de los importes.
-* `auth.js`: gestiona el registro y el inicio de sesión.
-* `auth-nav.js`: actualiza la navegación según el estado de autenticación.
-* `perfil.js`: muestra la información del usuario y su historial de pedidos.
-* `admin.js`: gestiona el control de acceso a la sección administrativa.
-* `admin-productos.js`: implementa las operaciones de administración del catálogo.
-* `pago.js`: gestiona la lógica del pago simulado.
-* `confirmacion.js`: consulta y muestra los datos del pedido confirmado.
-* `firebase/config.js`: inicializa Firebase y exporta los servicios de autenticación y base de datos.
-* `firebase/exportar-productos.js`: permite cargar los productos iniciales en Firestore.
-
-**## Decisiones de diseño**
-
-* Se seleccionó una identidad visual basada principalmente en tonos azules, celestes y turquesa para transmitir confianza, tecnología e innovación.
-* Se utilizó Bootstrap para facilitar el diseño responsive.
-* Se eligió la tipografía Poppins para mantener una identidad visual coherente.
-* Se seleccionaron imágenes representativas de productos tecnológicos.
-* Se trabajó en una interfaz simple, clara y fácil de navegar.
-* Se incorporaron componentes adaptables a dispositivos móviles.
-* Se separaron las funcionalidades en archivos JavaScript para facilitar su organización y mantenimiento.
-* Se incorporó Firebase para la autenticación y la persistencia de datos en la nube.
-* Se utilizaron reglas de seguridad de Firestore para establecer permisos de acceso.
-* Las funcionalidades se incorporaron progresivamente de acuerdo con los objetivos establecidos para cada sprint.
-
-**## Funcionalidades pendientes y mejoras**
-
-Entre los aspectos que pueden requerir revisión o ampliación se encuentran:
-
-* Verificación integral de las reglas de seguridad de Firestore.
-* Protección del rol de administrador para impedir modificaciones no autorizadas.
-* Validación de las operaciones sobre pedidos, contadores y reseñas.
-* Revisión del tratamiento seguro de los datos mostrados en la interfaz.
-* Pruebas integrales del proceso de compra, la actualización del stock y la confirmación del pedido.
-* Verificación del funcionamiento de todas las páginas y de la navegación en dispositivos móviles.
-
-La implementación de pagos reales y la adaptación del sistema para operar como un comercio electrónico de producción quedan fuera del alcance del pago simulado académico.
-
-**## Estado del proyecto**
-
-**### Sprint 1**
-
-Completado.
-
-* Identidad visual.
-* Estructura de las páginas.
-* Navegación.
-* Productos destacados.
-* Diseño responsive.
-* Estilos personalizados.
-
-**### Sprint 2**
-
-Completado.
-
-* Catálogo dinámico.
-* Búsqueda y filtros.
-* Detalle dinámico de productos.
-* Validación de stock.
-* Carrito de compras.
-* Modificación y eliminación de productos.
-* Cálculo de subtotales y total.
-* Persistencia mediante LocalStorage.
-
-**### Sprint 3 y funcionalidades posteriores**
-
-Se incorporaron las siguientes funcionalidades:
-
-* Registro e inicio de sesión.
-* Integración con Firebase Authentication.
-* Integración con Cloud Firestore.
-* Migración de productos a la base de datos.
-* Navegación según el estado de autenticación.
-* Perfil e historial de pedidos.
-* Panel de administración de productos.
-* Operaciones CRUD del catálogo.
-* Reglas de seguridad de Firestore.
-* Registro y numeración de pedidos.
-* Proceso de compra y pago simulado.
-* Confirmación de compra.
-* Colección para reseñas de productos.
-* Mejoras en la navegación y en la interfaz responsive.
-
-
-**### Sprint 4**
-
-* Durante este sprint se realizaron mejoras en la interfaz, el catálogo de productos y el proceso de compra.
-* Diseño del perfil: se mejoró la presentación visual de la página de perfil.
-* Reseñas de productos: se incorporaron enlaces desde el historial de pedidos para acceder a las reseñas, se ajustó la identificación de productos ya reseñados y se corrigió la duplicación del mensaje de confirmación.
-* Catálogo de productos: se corrigió el funcionamiento de la incorporación de productos al carrito y se verificó que el catálogo muestre únicamente los productos habilitados.
-* Validación de disponibilidad: se agregaron comprobaciones para evitar la compra de productos deshabilitados durante la preparación del pedido y la confirmación de la transacción.
-* Validaciones de compra: se reforzaron las comprobaciones de precio y stock antes de registrar el pedido.
-* Reglas de seguridad: se revisaron las reglas de Firestore relacionadas con la actualización del stock y la validación de las operaciones de compra.
-* Documentación: se actualizó el README para registrar los cambios realizados.
-
-**### Enlace público** 
-https://xentrotecno-e95f2.web.app/index.html
